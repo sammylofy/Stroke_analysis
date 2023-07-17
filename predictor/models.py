@@ -43,6 +43,7 @@ class Data(models.Model):
     class Meta:
         db_table = "data"
 
+
 class Researchers(models.Model):
     email = models.CharField(unique=False, null=False, max_length=100)
     name = models.CharField(unique=False, null=False, max_length=100)

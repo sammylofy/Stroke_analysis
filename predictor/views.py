@@ -22,7 +22,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 
 # Create your views here.
@@ -464,45 +464,48 @@ def predict(request):
     uname = UserDet.objects.values('name').get(phone=phone)
     name = uname.get('name')
     chance_stroke = ''
-    chance_stroke += "Provide dietary recommendation to   "+name+" aged "+ str(age) + " old  Whose probability of having stroke is "+str(prob)
+    chance_stroke += "Stroke Counsel to a patient named "+name+" aged "+ str(age) + "old,with detail diet " \
+                                                                                    "recommendations, " \
+                                                                                    "Whose probability of having " \
+                                                                                    "stroke is "+str(prob)
     if sex == 1:
-        chance_stroke += ' who is Male '
+        chance_stroke += ', a Male '
     if sex == 0:
-        chance_stroke += ' who is Female '
+        chance_stroke += ' a Female '
     if history == 1:
-        chance_stroke += ' with occurrence of stroke in family history '
+        chance_stroke += ' with a family history of stroke'
     if history == 0:
-        chance_stroke += ' with no Occurrence of stroke in family history '
+        chance_stroke += ' with no family history of stroke'
     if history == 2:
-        chance_stroke += ' with an uncertain history of family stroke.  '
+        chance_stroke += ' with an unsure family history of stroke.  '
     if hypertension == 1:
-        chance_stroke += ' The patient is hypertensive'
+        chance_stroke += ' This patient is hypertensive'
     if hypertension == 0:
-        chance_stroke += ' The patient is non hypertensive'
+        chance_stroke += ' The patient is not hypertensive'
     if inactivity == 0:
         chance_stroke += ' and does not exercise.'
     if inactivity == 1:
         chance_stroke += ' exercises regularly.'
     if cardiovascular == 0:
-        chance_stroke += ' The patient has not being diagnose of cardiovascular disease.'
+        chance_stroke += ' This patient has not being diagnosed of cardiovascular disease.'
     if cardiovascular == 1:
-        chance_stroke += ' The patient has been diagnosed of cardiovascular disease.'
+        chance_stroke += ' This patient has been diagnosed of cardiovascular disease.'
     if hyperlidermia == 0:
-        chance_stroke += ' The patient has also not been diagnosed of hyperlidermia'
+        chance_stroke += ' This patient has also not been diagnosed of hyperlipidemia,'
     if hyperlidermia == 1:
-        chance_stroke += ' The patient also suffers from hyperlidermia'
+        chance_stroke += ' The patient also suffers from hyperlipidemia,'
     if alcohol == 0:
         chance_stroke += ' and doesnt take alcohol.'
     if alcohol == 1:
         chance_stroke += ' and takes alcohol.'
     if tia == 0:
-        chance_stroke += ' No history of TIA. '
+        chance_stroke += ' No history of Transient Ischemic Stroke(TIA). '
     if tia == 1:
-        chance_stroke += ' History of TIA. '
+        chance_stroke += ' History of Transient Ischemic Stroke(TIA). '
     if msyndrome == 0:
-        chance_stroke += ' The patient does not suffer metabolic Syndrome, '
+        chance_stroke += ' not diagnosed of metabolic Syndrome, '
     if msyndrome == 1:
-        chance_stroke += ' The patient suffers from metabolic syndrome, '
+        chance_stroke += ' suffers from metabolic syndrome, '
     if atherosclerosis == 0:
         chance_stroke += ' does not suffer from atherosclerosis '
     if atherosclerosis == 1:
@@ -524,6 +527,7 @@ def predict(request):
     if smoking == 1:
         chance_stroke += ' smokes'
 
+        print(chance_stroke)
     counseling_response = comp(chance_stroke, 3000, 3)
 
     newdata = Data.objects.create(history=history, hypertension=hypertension, inactivity=inactivity,
