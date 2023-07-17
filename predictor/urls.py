@@ -9,10 +9,10 @@ urlpatterns = [
     path('message/', views.message, name='message'),
     path('report/', views.report, name='report'),
     path('dataset/', views.dataset, name='dataset'),
-    path('deluser/<id>', views.deluser, name = 'deluser'),
-    path('printreport/<pid>', views.printreport, name = 'printreport'),
-    path('printureport/<phone>', views.printureport, name = 'printureport'),
-    path('detailreport/<id>', views.detailreport, name = 'detailreport'),
+    path('deluser/<id>', views.deluser, name='deluser'),
+    path('printreport/<pid>', views.printreport, name='printreport'),
+    path('printureport/<phone>', views.printureport, name='printureport'),
+    path('detailreport/<id>', views.detailreport, name='detailreport'),
     path('users/', views.users, name='users'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('dashboard1/', views.dashboard1, name='dashboard1'),
@@ -36,6 +36,6 @@ urlpatterns = [
     path('question12/', views.question12, name='question12'),
     path('question13/', views.question13, name='question13'),
     path('predict/', views.predict, name='predict'),
-    path('results/<conseling>/<pred>/<phone>/<prob>', views.results, name='results'),
+    path('results/<conseling>/<pred>/<phone>/<prob>/<result>', views.results, name='results'),
 
 ]

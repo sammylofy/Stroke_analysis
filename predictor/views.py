@@ -9,6 +9,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.urls import reverse
+from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 from .models import UserDet, Data, DocDet, Researchers
 from django.utils import timezone
@@ -21,7 +22,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 
 # Create your views here.
@@ -193,14 +194,22 @@ def printreport(request, pid):
     advice = cadvice.get('advice')
     cphone = Data.objects.values('phone_id').get(id=pid)
     phone = cphone.get('phone_id')
-
+    model = pickle.load(open('model.pkl', 'rb'))
+    probability = model.predict_proba([
+        [history, hypertension, inactivity, cardiovascular, hyperlidermia, alcohol, tia, msyndrome, atherosclerosis,
+         sex, age, af,
+         lvh, diabetes, smoking]])
+    prob = probability[0][1]
+    prob = float(prob * 100)
+    prob = round(prob, 2)
+    result = prob < 70
     return render(request, 'printreport.html',
                   context={'title': title, "sex": sex, "age": age, "history": history, "hypertension": hypertension,
                            "inactivity": inactivity, "cardiovascular": cardiovascular,
                            "hyperlidermia": hyperlidermia, "alcohol": alcohol, "tia": tia, "msyndrome": msyndrome,
                            "atherosclerosis": atherosclerosis, "af": af, "lvh": lvh,
                            "diabetes": diabetes, "smoking": smoking, "stroke": stroke, "phone": phone,
-                           "advice": advice, "cgender": cgender})
+                           "advice": advice, "cgender": cgender, 'prob': prob})
 
 
 def dataset(request):
@@ -443,134 +452,78 @@ def predict(request):
          lvh, diabetes, smoking]])
     pred = round(pred[0])
     prob = probability[0][1]
-    print(prob)
-    prob = prob * 100
-    print(prob)
+    prob = float(prob * 100)
+    prob = round(prob, 2)
+    result = "False"
+    if prob < 70 :
+        result = "True"
+    else:
+        result = "False"
+    print('result', result)
     phone = request.session['phone']
     uname = UserDet.objects.values('name').get(phone=phone)
     name = uname.get('name')
     chance_stroke = ''
-    if prob > 69:
-        chance_stroke += "Provide dietary recommendation to   "+name+" aged "+ str(age) + " old  Whose probability of having stroke is"+str(prob)
-        if sex == 1:
-            chance_stroke += 'male '
-        if sex == 0:
-            chance_stroke += 'Female '
-        if history == 1:
-            chance_stroke += 'with occurrence of stroke in family history '
-        if history == 0:
-            chance_stroke += ' with no Occurrence of stroke in family history '
-        if history == 2:
-            chance_stroke += ' with an uncertain history of family stroke.  '
-        if hypertension == 1:
-            chance_stroke += 'The patient is hypertensive'
-        if hypertension == 0:
-            chance_stroke += 'The patient is non hypertensive'
-        if inactivity == 0:
-            chance_stroke += ' and does not exercise.'
-        if inactivity == 1:
-            chance_stroke += ' exercises regularly.'
-        if cardiovascular == 0:
-            chance_stroke += 'The patient has not being diagnose of cardiovascular disease.'
-        if cardiovascular == 1:
-            chance_stroke += 'The patient has been diagnosed of cardiovascular disease.'
-        if hyperlidermia == 0:
-            chance_stroke += 'The patient has also not been diagnosed of hyperlidermia'
-        if hyperlidermia == 1:
-            chance_stroke += 'The patient also suffers from hyperlidermia'
-        if alcohol == 0:
-            chance_stroke += ' and doesnt take alcohol.'
-        if alcohol == 1:
-            chance_stroke += ' and takes alcohol.'
-        if tia == 0:
-            chance_stroke += ' No history of TIA. '
-        if tia == 1:
-            chance_stroke += 'History of TIA. '
-        if msyndrome == 0:
-            chance_stroke += 'The patient does not suffer metabolic Sysndrome, '
-        if msyndrome == 1:
-            chance_stroke += 'The patient suffers from metabolic sysndrome, '
-        if atherosclerosis == 0:
-            chance_stroke += ' does not suffer from atherosclerosis '
-        if atherosclerosis == 1:
-            chance_stroke += 'suffer from atherosclerosis, '
-        if af == 0:
-            chance_stroke += 'Has no case of atrial fibrillation, '
-        if af == 1:
-            chance_stroke += 'has been reported to have atrial fibrillation, '
-        if lvh == 0:
-            chance_stroke += 'does not suffer from Left Ventricular Hypertrophy, '
-        if lvh == 1:
-            chance_stroke += 'suffers from Left Ventricular Hypertrophy, '
-        if diabetes == 0:
-            chance_stroke += 'is not diabetic, '
-        if diabetes == 1:
-            chance_stroke += 'is diabetic, '
-        if smoking == 0:
-            chance_stroke += 'does not smoke'
-        if smoking == 1:
-            chance_stroke += 'smokes'
-    else:
-        chance_stroke += "Provide dietary recommendation to   "+name+" aged "+ str(age) + "old  whose probability of " \
-                                                                                          "having stroke is "+str(prob)
-        if sex == 1:
-            chance_stroke += 'male '
-        if sex == 0:
-            chance_stroke += 'Female '
-        if history == 1:
-            chance_stroke += 'with ocurrence of stroke in family history '
-        if history == 0:
-            chance_stroke += ' with no Ocurrence of stroke in family history '
-        if history == 2:
-            chance_stroke += ' with an uncertained history of family stroke.  '
-        if hypertension == 1:
-            chance_stroke += 'The patient is hypertensive'
-        if hypertension == 0:
-            chance_stroke += 'The patient is non hypertensive'
-        if inactivity == 0:
-            chance_stroke += ' and does not exercise.'
-        if inactivity == 1:
-            chance_stroke += ' exercises regularly.'
-        if cardiovascular == 0:
-            chance_stroke += 'The patient has not being diagnose of cardiovascular disease.'
-        if cardiovascular == 1:
-            chance_stroke += 'The patient has been diagnosed of cardiovascular disease.'
-        if hyperlidermia == 0:
-            chance_stroke += 'The patient has also not been diagnosed of hyperlidermia'
-        if hyperlidermia == 1:
-            chance_stroke += 'The patient also suffers from hyperlidermia'
-        if alcohol == 0:
-            chance_stroke += ' and doesnt take alcohol.'
-        if alcohol == 1:
-            chance_stroke += ' and takes alcohol.'
-        if tia == 0:
-            chance_stroke += ' No history of TIA. '
-        if tia == 1:
-            chance_stroke += 'History of TIA. '
-        if msyndrome == 0:
-            chance_stroke += 'The patient does not suffer metabolic Sysndrome, '
-        if msyndrome == 1:
-            chance_stroke += 'The patient suffers from metabolic sysndrome, '
-        if atherosclerosis == 0:
-            chance_stroke += ' does not suffer from atherosclerosis '
-        if atherosclerosis == 1:
-            chance_stroke += 'suffer from atherosclerosis, '
-        if af == 0:
-            chance_stroke += 'Has no case of atrial fibrillation, '
-        if af == 1:
-            chance_stroke += 'has been reported to have atrial fibrillation, '
-        if lvh == 0:
-            chance_stroke += 'does not suffer from Left Ventricular Hypertrophy, '
-        if lvh == 1:
-            chance_stroke += 'suffers from Left Ventricular Hypertrophy, '
-        if diabetes == 0:
-            chance_stroke += 'is not diabetic, '
-        if diabetes == 1:
-            chance_stroke += 'is diabetic, '
-        if smoking == 0:
-            chance_stroke += 'does not smoke'
-        if smoking == 1:
-            chance_stroke += 'smokes'
+    chance_stroke += "Provide dietary recommendation to   "+name+" aged "+ str(age) + " old  Whose probability of having stroke is "+str(prob)
+    if sex == 1:
+        chance_stroke += ' who is Male '
+    if sex == 0:
+        chance_stroke += ' who is Female '
+    if history == 1:
+        chance_stroke += ' with occurrence of stroke in family history '
+    if history == 0:
+        chance_stroke += ' with no Occurrence of stroke in family history '
+    if history == 2:
+        chance_stroke += ' with an uncertain history of family stroke.  '
+    if hypertension == 1:
+        chance_stroke += ' The patient is hypertensive'
+    if hypertension == 0:
+        chance_stroke += ' The patient is non hypertensive'
+    if inactivity == 0:
+        chance_stroke += ' and does not exercise.'
+    if inactivity == 1:
+        chance_stroke += ' exercises regularly.'
+    if cardiovascular == 0:
+        chance_stroke += ' The patient has not being diagnose of cardiovascular disease.'
+    if cardiovascular == 1:
+        chance_stroke += ' The patient has been diagnosed of cardiovascular disease.'
+    if hyperlidermia == 0:
+        chance_stroke += ' The patient has also not been diagnosed of hyperlidermia'
+    if hyperlidermia == 1:
+        chance_stroke += ' The patient also suffers from hyperlidermia'
+    if alcohol == 0:
+        chance_stroke += ' and doesnt take alcohol.'
+    if alcohol == 1:
+        chance_stroke += ' and takes alcohol.'
+    if tia == 0:
+        chance_stroke += ' No history of TIA. '
+    if tia == 1:
+        chance_stroke += ' History of TIA. '
+    if msyndrome == 0:
+        chance_stroke += ' The patient does not suffer metabolic Syndrome, '
+    if msyndrome == 1:
+        chance_stroke += ' The patient suffers from metabolic syndrome, '
+    if atherosclerosis == 0:
+        chance_stroke += ' does not suffer from atherosclerosis '
+    if atherosclerosis == 1:
+        chance_stroke += ' suffer from atherosclerosis, '
+    if af == 0:
+        chance_stroke += ' has no case of atrial fibrillation, '
+    if af == 1:
+        chance_stroke += ' has been reported to have atrial fibrillation, '
+    if lvh == 0:
+        chance_stroke += ' does not suffer from Left Ventricular Hypertrophy, '
+    if lvh == 1:
+        chance_stroke += ' suffers from Left Ventricular Hypertrophy, '
+    if diabetes == 0:
+        chance_stroke += ' is not diabetic, '
+    if diabetes == 1:
+        chance_stroke += ' is diabetic, '
+    if smoking == 0:
+        chance_stroke += ' does not smoke'
+    if smoking == 1:
+        chance_stroke += ' smokes'
+
     counseling_response = comp(chance_stroke, 3000, 3)
 
     newdata = Data.objects.create(history=history, hypertension=hypertension, inactivity=inactivity,
@@ -579,19 +532,32 @@ def predict(request):
                                   sex=sex, age=age, af=af, lvh=lvh, diabetes=diabetes, smoking=smoking, stroke=pred,
                                   phone_id=phone, advice=counseling_response)
     newdata.save()
-    # accuracy = accuracy_score(y_test, pred)
-    # precision = precision_score(y_test, pred)
-    # recall = recall_score(y_test, pred)
-    return redirect('results', conseling=counseling_response, pred=pred, phone=phone, prob=prob)
+    #accuracy = accuracy_score([
+        #[history, hypertension, inactivity, cardiovascular, hyperlidermia, alcohol, tia, msyndrome, atherosclerosis,
+         #sex, age, af,
+         #lvh, diabetes, smoking]], pred)
+    #precision = precision_score([
+        #[history, hypertension, inactivity, cardiovascular, hyperlidermia, alcohol, tia, msyndrome, atherosclerosis,
+         #sex, age, af,
+         #lvh, diabetes, smoking]], pred)
+    #recall = recall_score([
+        #[history, hypertension, inactivity, cardiovascular, hyperlidermia, alcohol, tia, msyndrome, atherosclerosis,
+        # sex, age, af,
+         #lvh, diabetes, smoking]], pred)
+    #print('Accuracy',accuracy)
+    #print('Precision', precision)
+    #print('Recall', recall)
+    return redirect('results', conseling=counseling_response, pred=pred, phone=phone, prob=prob, result=result)
 
 
-def results(request, conseling, pred, phone, prob):
+def results(request, conseling, pred, phone, prob, result):
     title = "Results"
     try:
         users = DocDet.objects.all()
-    except DocDet.DoesNotExist: users = None
+    except DocDet.DoesNotExist:
+        users = None
     return render(request, 'results.html',
-                  context={"title": title, "conseling": conseling, 'pred': pred, 'users': users, 'phone': phone, 'prob': prob})
+                  context={"title": title, "conseling": conseling, 'pred': pred, 'users': users, 'phone': phone, 'prob': prob, 'result':result})
 
 
 def comp(PROMPT, MaxToken, outputs):
@@ -658,14 +624,26 @@ def printureport(request, phone):
     advice = cadvice.get('advice')
     cphone = Data.objects.values('phone_id').get(phone_id=phone)
     phone = cphone.get('phone_id')
-
+    model = pickle.load(open('model.pkl', 'rb'))
+    probability = model.predict_proba([
+        [history, hypertension, inactivity, cardiovascular, hyperlidermia, alcohol, tia, msyndrome, atherosclerosis,
+         sex, age, af,
+         lvh, diabetes, smoking]])
+    prob = probability[0][1]
+    prob = float(prob * 100)
+    prob = round(prob, 2)
+    result = False
+    if prob < 50:
+        result = True
+    else:
+        result = False
     return render(request, 'printreport.html',
                   context={'title': title, "sex": sex, "age": age, "history": history, "hypertension": hypertension,
                            "inactivity": inactivity, "cardiovascular": cardiovascular,
                            "hyperlidermia": hyperlidermia, "alcohol": alcohol, "tia": tia, "msyndrome": msyndrome,
                            "atherosclerosis": atherosclerosis, "af": af, "lvh": lvh,
                            "diabetes": diabetes, "smoking": smoking, "stroke": stroke, "phone": phone,
-                           "advice": advice, "cgender": cgender})
+                           "advice": advice, "cgender": cgender, 'prob': prob})
 
 def requestdataset(request):
     title = 'New Researcher'
