@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+{% load mytags %}
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Receipt</title>
+        <style>
+            .page {
+                width: 21cm;
+                min-height: 29.7cm;
+
+                margin: 1cm auto;
+
+                background: white;
+                box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            }
+            .subpage {
+                padding: 1cm;
+                height: 237mm;
+            }
+
+            @page {
+                size: A4;
+                margin: 0;
+            }
+            @media print {
+                .page {
+                    margin: 0;
+                    border: initial;
+                    border-radius: initial;
+                    width: initial;
+                    min-height: initial;
+                    box-shadow: initial;
+                    background: initial;
+                    page-break-after: always;
+                }
+            }
+            table.blueTable {
+                border: 1px solid #1C6EA4;
+                background-color: #EEEEEE;
+                width: 100%;
+                text-align: left;
+                border-collapse: collapse;
+            }
+            table.blueTable td, table.blueTable th {
+                border: 1px solid #AAAAAA;
+                padding: 3px 2px;
+            }
+            table.blueTable tbody td {
+                font-size: 13px;
+            }
+            table.blueTable tr:nth-child(even) {
+                background: #D0E4F5;
+            }
+            table.blueTable thead {
+                background: #1C6EA4;
+                background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+                background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+                background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+                border-bottom: 2px solid #444444;
+            }
+            table.blueTable thead th {
+                font-size: 15px;
+                font-weight: bold;
+                color: #FFFFFF;
+                border-left: 2px solid #D0E4F5;
+            }
+            table.blueTable thead th:first-child {
+                border-left: none;
+            }
+
+            table.blueTable tfoot {
+                font-size: 14px;
+                font-weight: bold;
+                color: #FFFFFF;
+                background: #D0E4F5;
+                background: -moz-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+                background: -webkit-linear-gradient(top, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+                background: linear-gradient(to bottom, #dcebf7 0%, #d4e6f6 66%, #D0E4F5 100%);
+                border-top: 2px solid #444444;
+            }
+            table.blueTable tfoot td {
+                font-size: 14px;
+            }
+            table.blueTable tfoot .links {
+                text-align: right;
+            }
+            table.blueTable tfoot .links a{
+                display: inline-block;
+                background: #1C6EA4;
+                color: #FFFFFF;
+                padding: 2px 8px;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="page">
+                <div class="subpage">
+                    <table border="1" style="width:100%" class="blueTable">
+                        <tr>
+                            <td>
+                                <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0">
+                                    <tr>
+                                        <td width="15%" align="right"><img src="{% static 'dashboard/assets/img/logo.jpg' %}" alt="" width="96" height="91" ></td>
+                                        <td width="70%" height="32" align="center"><h4><strong>Stroke Predictor </strong></h4><p>Prediction Report</p></td>
+                                        <td width="15%" align="left"><img src="{% static 'dashboard/assets/img/logo.jpg' %}" alt="" width="96" height="91"></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="center"><strong>Prediction Details</strong></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <table width="100%" border="0" cellspacing="6" cellpadding="1">
+                                    <tr>
+                                        <td align="right" colspan="3">Name: {% getname phone %} Phone: {{ phone }}</td>
+                                    </tr>
+
+                                    <tr>
+                                         <td align="right">Sex</td>
+                                         <td align="left">{{ cgender }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Age</td>
+                                        <td align="left">{{age}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Family History</td>
+                                        <td align="left">{% if history == 1 %}Known Cases of stroke {% elif history == 2 %} Not sure about known cases of stroke{% elif history == 0 %}No known cases of stroke{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Hypertension</td>
+                                        <td align="left">{% if hypertension == 0 %}Not hypertensive{% elif hypertension == 1 %}Hypertensive{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Physical Inactivity</td>
+                                        <td align="left">{% if inactivity == 0 %}Do not exercise alot{% elif inactivity == 1 %}Exercise alot{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Cardiovascular Disease</td>
+                                        <td align="left">{% if cardiovascular == 0 %}Never been diagnosed of Cardiovascular Disease{% elif cardiovascular == 1 %}Have been diagnosed of Cardiovascular Disease{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Hyperlidermia</td>
+                                        <td align="left">{% if hyperlidermia == 0 %}Never been diagnosed of Hyperlidermia{% elif hyperlidermia == 1 %}Have been diagnosed of Hyperlidermia{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Alcohol Comsuption</td>
+                                        <td align="left">{% if alcohol == 0 %}Do not take alcohol{% elif alcohol == 1 %}Takes alcohol{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">History of TIA</td>
+                                        <td align="left">{% if tia == 0 %}No history of TIA{% elif tia == 1 %}Has history of TIA{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Metabolic Syndrome</td>
+                                        <td align="left">{% if msyndrome == 0 %}Does not suffers from Metabolic Syndrome{% elif msyndrome == 1 %}Suffers from Metabolic Syndrome{% endif %}</td>
+                                    </tr>
+                                <tr>
+                                        <td align="right">Atherosclerosis</td>
+                                        <td align="left">{% if atherosclerosis == 0 %}Does not suffers from Atherosclerosis{% elif atherosclerosis == 1 %}Suffers from Atherosclerosis{% endif %}</td>
+                                    </tr>
+                                <tr>
+                                        <td align="right">Atrial Fibrillation</td>
+                                        <td align="left">{% if af == 0 %}Not diagnosed of Atrial Fibrillation{% elif af == 1 %}Diagnosed of Atrial Fibrillation{% endif %}</td>
+                                    </tr>
+                                <tr>
+                                        <td align="right">Left Ventricular Hypertrophy</td>
+                                        <td align="left">{% if lvh == 0 %}Do not have previous case of Left Ventricular Hypertrophy{% elif lvh == 1 %}Have previous case of Left Ventricular Hypertrophy{% endif %}</td>
+                                    </tr>
+                                <tr>
+                                        <td align="right">Diabetes</td>
+                                        <td align="left">{% if diabetes == 0 %}Not diabetic{% elif diabetes == 1 %}Diabetic{% endif %}</td>
+                                    </tr>
+                                <tr>
+                                        <td align="right">Smoking</td>
+                                        <td align="left">{% if smoking == 0 %}Do not smoke{% elif smoking == 1 %}smoke{% endif %}</td>
+                                    </tr>
+                                <tr>
+                                        <td align="right">General Prediction</td>
+                                        <td align="left">{% if stroke == 0 %}Low risk of having stroke{% elif stroke == 1 %}High risk of having stroke{% endif %}</td>
+                                    </tr>
+                                <tr>
+                                        <td colspan="2" align="justify"><p>{{ advice }}</p></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <a href="javascript:print();">[ Click to Print ]</a> [ <a onClick="window.close();" >Close</a> ]
+                </div> <!-- main form -->
+            </div> <!-- row -->
+
+        </div> <!-- container -->
+    </body>
+</html>

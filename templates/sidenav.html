@@ -1,0 +1,46 @@
+{% load static %}
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+        {%if user.is_superuser%}
+            <li class="nav-item">
+        <a class="nav-link " href="{% url 'users' %}">
+          <i class="bi bi-people-fill"></i>
+          <span>Users</span>
+        </a>
+      </li>
+        {% else%}
+    <li class="nav-item">
+        <a class="nav-link " href="{% url 'dashboard' %}">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+      <li class="nav-item">
+        <a class="nav-link " href="{% url 'clients' %}">
+          <i class="bi bi-people-fill"></i>
+          <span>Clients</span>
+        </a>
+      </li><!-- End Dashboard Nav -->
+            <li class="nav-item">
+        <a class="nav-link " href="{% url 'report' %}">
+          <i class="bi bi-graph-up"></i>
+          <span>Reports</span>
+        </a>
+      </li>
+            <li class="nav-item">
+        <a class="nav-link " href="{% url 'dataset' %}">
+          <i class="bi bi-database"></i>
+          <span>Dataset</span>
+        </a>
+      </li>
+        {% endif %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'logout_user' %}">
+          <i class="bi bi-power"></i>
+          <span>Logout</span>
+        </a>
+      </li>  <!-- End Login Page Nav -->
+    </ul>
+
+  </aside>

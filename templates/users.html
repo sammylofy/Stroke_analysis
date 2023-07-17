@@ -1,0 +1,126 @@
+{% extends "dslayout.html" %}
+{% load static %}
+{%load mytags %}
+{% block content %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Users</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'users' %}">Home</a></li>
+          <li class="breadcrumb-item active">Users</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="row">
+
+            <!-- Customers Card -->
+            <div class="col-xxl-4 col-xl-12">
+
+              <div class="card info-card sales-card">
+
+
+                <div class="card-body">
+                  <h5 class="card-title">New User</h5>
+              <form action="{% url 'users' %}" method="post" enctype="multipart/form-data">
+              {% csrf_token%}
+            {% for message in messages %}
+                <div class="alert alert-success form-group col-12" role="alert">
+                    {{message}}
+                </div>
+            {% endfor %}
+            <div class="row">
+              <div class="form-group col-6 mb-2">
+              <input type="text" name="username" class="form-control" placeholder="Username" required>
+            </div>
+            <div class="form-group col-6 mb-2">
+              <input type="password" name="password" class="form-control" placeholder="password" required>
+            </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-6 mb-2">
+              <input type="password" name="cpassword" class="form-control" placeholder="Confirm password" required>
+            </div>
+            <div class="form-group col-6 mb-2">
+              <input type="text" name="firstname" class="form-control" placeholder="First Name" required>
+            </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-6 mb-2">
+              <input type="text" name="lastname" class="form-control" placeholder="Last Name"  required>
+            </div>
+            <div class="form-group col-6 mb-2">
+              <input type="email" name="email" class="form-control" placeholder="Email" >
+            </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-6 mb-2">
+              <input type="text" name="phone" class="form-control" placeholder="Phone Number" >
+            </div>
+              <div class="col-6 mb-2">
+            <button type="submit" class="btn btn-primary add-item m-r5"><i class="fa fa-fw fa-plus-circle"></i>Add</button>
+          </div>
+            </div>
+            
+          </form>
+
+                </div>
+              </div>
+
+            </div><!-- End Customers Card -->
+
+            <!-- Reports -->
+            <div class="col-12">
+              <div class="card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Users</h5>
+
+              <!-- Table with stripped rows -->
+              <table class="table table-striped datatable" width="100%">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Email</th>
+                      <th scope="col">Phone Number</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                 {%for user in users %}
+              <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{user.userid.username}}</td>
+                <td>{{user.userid.first_name}}</td>
+                <td>{{user.userid.last_name}}</td>
+                <td>{{user.userid.email}}</td>
+                  <td>{{user.phone}}</td>
+                <td> <a href="{%url 'deluser' user.userid.id %}" class="btn btn-danger">Delete</a></td>
+              </tr>
+              {% endfor %}
+                  
+                </tbody>
+              </table>
+                </div>
+
+              </div>
+            </div><!-- End Reports -->
+
+            
+
+          </div>
+        </div><!-- End Left side columns -->
+
+      </div>
+    </section>
+  </main>
+  {%endblock%}

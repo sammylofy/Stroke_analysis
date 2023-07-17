@@ -1,0 +1,118 @@
+{% extends "dslayout.html" %}
+{% load static %}
+{% load mytags %}
+{% block content %}
+<main id="main" class="main">
+    <div class="pagetitle">
+      <h1>Detail Report</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+          <li class="breadcrumb-item active">Detail Report</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="row">
+            <!-- Sales Card -->
+            <div class="col-xxl-4 col-md-12">
+              <div class="card info-card customers-card">
+
+                <div class="card-body">
+                    <h5 class="card-title">Name: {% getname phone %} Phone: {{ phone }}</h5>
+                  <table class="table table-responsive">
+                <thead>
+                  <tr>
+                    <th align="right">Condition</th>
+                      <th align="left">Response</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                                    <tr>
+                                         <td align="right">Sex</td>
+                                         <td align="left">{{ cgender }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Age</td>
+                                        <td align="left">{{age}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Family History</td>
+                                        <td align="left">{% if history == 1 %}Known Cases of stroke {% elif history == 2 %} Not sure about known cases of stroke{% elif history == 0 %}No known cases of stroke{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Hypertension</td>
+                                        <td align="left">{% if hypertension == 0 %}Not hypertensive{% elif hypertension == 1 %}Hypertensive{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Physical Inactivity</td>
+                                        <td align="left">{% if inactivity == 0 %}Do not exercise alot{% elif inactivity == 1 %}Exercise alot{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Cardiovascular Disease</td>
+                                        <td align="left">{% if cardiovascular == 0 %}Never been diagnosed of Cardiovascular Disease{% elif cardiovascular == 1 %}Have been diagnosed of Cardiovascular Disease{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Hyperlidermia</td>
+                                        <td align="left">{% if hyperlidermia == 0 %}Never been diagnosed of Hyperlidermia{% elif hyperlidermia == 1 %}Have been diagnosed of Hyperlidermia{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Alcohol Comsuption</td>
+                                        <td align="left">{% if alcohol == 0 %}Do not take alcohol{% elif alcohol == 1 %}Takes alcohol{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">History of TIA</td>
+                                        <td align="left">{% if tia == 0 %}No history of TIA{% elif tia == 1 %}Has history of TIA{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">Metabolic Syndrome</td>
+                                        <td align="left">{% if msyndrome == 0 %}Does not suffers from Metabolic Syndrome{% elif msyndrome == 1 %}Suffers from Metabolic Syndrome{% endif %}</td>
+                                    </tr>
+                                <tr>
+                                        <td align="right">Atherosclerosis</td>
+                                        <td align="left">{% if atherosclerosis == 0 %}Does not suffers from Atherosclerosis{% elif atherosclerosis == 1 %}Suffers from Atherosclerosis{% endif %}</td>
+                                    </tr>
+                                <tr>
+                                        <td align="right">Atrial Fibrillation</td>
+                                        <td align="left">{% if af == 0 %}Not diagnosed of Atrial Fibrillation{% elif af == 1 %}Diagnosed of Atrial Fibrillation{% endif %}</td>
+                                    </tr>
+                                <tr>
+                                        <td align="right">Left Ventricular Hypertrophy</td>
+                                        <td align="left">{% if lvh == 0 %}Do not have previous case of Left Ventricular Hypertrophy{% elif lvh == 1 %}Have previous case of Left Ventricular Hypertrophy{% endif %}</td>
+                                    </tr>
+                                <tr>
+                                        <td align="right">Diabetes</td>
+                                        <td align="left">{% if diabetes == 0 %}Not diabetic{% elif diabetes == 1 %}Diabetic{% endif %}</td>
+                                    </tr>
+                                <tr>
+                                        <td align="right">Smoking</td>
+                                        <td align="left">{% if smoking == 0 %}Do not smoke{% elif smoking == 1 %}smoke{% endif %}</td>
+                                    </tr>
+                                <tr>
+                                        <td align="right">General Prediction</td>
+                                        <td align="left">{% if stroke == 0 %}Low risk of having stroke{% elif stroke == 1 %}High risk of having stroke{% endif %}</td>
+                                    </tr>
+                                <tr>
+                                        <td colspan="2" align="justify"><p>{{ advice }}</p></td>
+                                    </tr>
+                </tbody>
+              </table>
+                <p><a href="{% url 'printreport' id %}" target="_blank">Print Full Report</a></p>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->
+
+          </div>
+        </div><!-- End Left side columns -->
+
+      </div>
+    </section>
+
+  </main>
+  {%endblock%}

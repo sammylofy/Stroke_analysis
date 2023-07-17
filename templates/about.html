@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+<!-- load static -->
+
+<!-- content -->
+{% block content %}
+<!-- ======= Breadcrumbs ======= -->
+    <section id="breadcrumbs" class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>About</h2>
+          <ol>
+            <li><a href="{{ url_for('index' ) }}">Home</a></li>
+            <li>About</li>
+          </ol>
+        </div>
+
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <!-- ======= About Us Section ======= -->
+    <section id="about-us" class="about-us">
+      <div class="container" data-aos="fade-up">
+
+        <div class="row content">
+          <div class="col-lg-6" data-aos="fade-right">
+            <h2>About the Stroke Predictor</h2>
+            <h3>Developed by Olofu Samuel</h3>
+          </div>
+          <div class="col-lg-6 pt-4 pt-lg-0" data-aos="fade-left">
+            <p>
+                Stroke occurs when the blood flow to various areas of the brain is disrupted or diminished, resulting in the cells in those areas of the brain not receiving the nutrients and oxygen they require and dying. A stroke is a medical emergency that requires urgent medical attention. Early detection and appropriate management are required to prevent further damage to the affected area of the brain and other complications in other parts of the body.
+            </p>
+            <ul>
+              <li><i class="ri-check-double-line"></i> Predicting system is developed using Random Forest Algorithm.</li>
+            </ul>
+
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End About Us Section -->
+{% endblock content %}

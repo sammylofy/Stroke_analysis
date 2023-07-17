@@ -1,0 +1,131 @@
+{% extends 'dslayout.html'%}
+{% load static %}
+{%load mytags %}
+{% block content %}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Dashboard</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+          <li class="breadcrumb-item active">Dashboard</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="row">
+
+            <!-- Reports -->
+            <div class="col-12">
+              <div class="card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Distribution</h5>
+                <div id="columnChart"></div>
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#columnChart"), {
+                    series: [{
+                      name: 'Yes',
+                      data: [{% hypertension 1 %}, {% inactivity 1 %}, {% cardiovascular 1 %}, {% hyperlidermia 1 %}, {% alcohol 1 %}, {% tia 1 %}, {% msyndrome 1 %}, {% atherosclerosis 1 %}, {% sex 1 %}, {% af 1 %}, {% lvh 1 %}, {% diabetes 1 %}, {% smoking 1 %}, {% stroke 1 %}]
+                    }, {
+                      name: 'No',
+                      data: [{% hypertension 0 %}, {% inactivity 0 %}, {% cardiovascular 0 %}, {% hyperlidermia 0 %}, {% alcohol 0 %}, {% tia 0 %}, {% msyndrome 0 %}, {% atherosclerosis 0 %}, {% sex 0 %}, {% af 0 %}, {% lvh 0 %}, {% diabetes 0 %}, {% smoking 0 %}, {% stroke 0 %}]
+                    }],
+                    chart: {
+                      type: 'bar',
+                      height: 350
+                    },
+                    plotOptions: {
+                      bar: {
+                        horizontal: false,
+                        columnWidth: '55%',
+                        endingShape: 'rounded'
+                      },
+                    },
+                    dataLabels: {
+                      enabled: false
+                    },
+                    stroke: {
+                      show: true,
+                      width: 2,
+                      colors: ['transparent']
+                    },
+                    xaxis: {
+                      categories: ['Hypertension', 'Exercise', 'Card Dis.', 'Hyperlidermia', 'Alcohol Con.', 'TIA','Meta. Syndrome', 'Atherosclerosis', 'Sex', 'Atrial F', 'LVH', 'Diabetes', 'Smoking','Stroke'],
+                    },
+                    yaxis: {
+                      title: {
+                        text: '(Ocurrence)'
+                      }
+                    },
+                    fill: {
+                      opacity: 1
+                    },
+                    tooltip: {
+                      y: {
+                        formatter: function(val) {
+                          return val
+                        }
+                      }
+                    }
+                  }).render();
+                });
+              </script>
+                </div>
+
+              </div>
+            </div><!-- End Reports -->
+
+        <!-- Reports -->
+            <div class="col-12">
+              <div class="card">
+
+                <div class="card-body">
+                  <h5 class="card-title">History Distribution</h5>
+                <div id="barChart"></div>
+
+              <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                  new ApexCharts(document.querySelector("#barChart"), {
+                    series: [{
+                      data: [{% history 1 %}, {% history 0 %}, {% history 2 %}]
+                    }],
+                    chart: {
+                      type: 'bar',
+                      height: 350
+                    },
+                    plotOptions: {
+                      bar: {
+                        borderRadius: 4,
+                        horizontal: true,
+                      }
+                    },
+                    dataLabels: {
+                      enabled: false
+                    },
+                    xaxis: {
+                      categories: ['Yes', 'No',' Not Sure'
+                      ],
+                    }
+                  }).render();
+                });
+              </script>
+                </div>
+
+              </div>
+            </div><!-- End Reports -->
+
+          </div>
+        </div><!-- End Left side columns -->
+
+      </div>
+    </section>
+  </main>
+  {%endblock%}

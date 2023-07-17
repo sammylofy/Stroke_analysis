@@ -1,0 +1,65 @@
+{% extends "dslayout.html" %}
+{% load static %}
+{% block content %}
+<main id="main" class="main">
+    <div class="pagetitle">
+      <h1>Reports</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+          <li class="breadcrumb-item active">Reports</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+    <section class="section dashboard">
+      <div class="row">
+
+        <!-- Left side columns -->
+        <div class="col-lg-12">
+          <div class="row">
+            <!-- Sales Card -->
+            <div class="col-xxl-4 col-md-12">
+              <div class="card info-card customers-card">
+
+                <div class="card-body">
+                  <h5 class="card-title">Clients</h5>
+                  <table class="table datatable">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                      <th scope="col">Phone</th>
+                    <th scope="col">Stroke Projection</th>
+                      <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {%for report in reports%}
+                  <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{report.phone.name}}</td>
+                      <td>{{report.phone.phone}}</td>
+                      {% if report.stroke == 0 %}
+                    <td>Low</td>
+                      {% elif report.stroke == 1 %}
+                      <td>High</td>
+                      {% endif %}
+                      <td><a href="{%url 'detailreport' report.id %}" class="btn btn-danger">Detail Report</a></td>
+                  </tr>
+                  {%endfor%}
+                  
+                </tbody>
+              </table>
+                </div>
+
+              </div>
+            </div><!-- End Sales Card -->            
+
+          </div>
+        </div><!-- End Left side columns -->
+
+      </div>
+    </section>
+    
+  </main>
+  {%endblock%}

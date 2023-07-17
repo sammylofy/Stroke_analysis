@@ -1,0 +1,73 @@
+{% extends 'layout.html'%}
+<!-- load static -->
+<!-- content -->
+{% block content %}
+<!-- ======= Breadcrumbs ======= -->
+    <section id="breadcrumbs" class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Results</h2>
+          <ol>
+            <li><a href="{% url 'index' %}">Home</a></li>
+            <li>Results</li>
+          </ol>
+        </div>
+
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    <!-- ======= About Us Section ======= -->
+    <section id="contact" class="contact">
+      <div class="container" data-aos="fade-up">
+
+        <div class="row content">
+          <div class="col-lg-12 pt-4 pt-lg-0" data-aos="fade-left">
+            <div class="row mt-5 justify-content-center" data-aos="fade-up">
+          <div class="col-lg-10">
+                <div class="row content">
+          <div class="col-lg-12 pt-4 pt-lg-0" data-aos="fade-left">
+            <div class="row mt-5 justify-content-center" data-aos="fade-up">
+          <div class="col-lg-10">
+            <form action="{% url 'requestdataset'%}" method="post" >
+                 {% csrf_token%}
+                <div class="row">
+                    <div class="alert alert-info" style="text-align: center; font-size: larger"><strong>Provide your basic Info to continue</strong></div>
+                </div>
+                <hr>
+                 <div class="row">
+                <div class="col-md-12 form-group mt-3 mt-md-0">
+                    <label for="No">Email</label>
+                    <input type="email" id="css" name="email" class="form-control" placeholder="Email" required>
+                </div>
+
+                <div class="col-md-12 form-group mt-3 mt-md-0">
+                         <label for="Yes">Name</label>
+                    <input type="text" id="css" name="name" class="form-control" placeholder="Name" required>
+                </div>
+              </div>
+
+              <div class="row">
+                     <div class="col-md-12 form-group mt-3 mt-md-0">
+                         <hr>
+                         <label></label>
+                         <button type="reset" class="btn btn-outline-primary">Reset</button>
+                         <button type="submit" class="btn btn-outline-primary">Submit</button>
+                         <a href="{% url 'index' %}" class="btn btn-outline-primary">Cancel</a>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </div>
+          </div>
+        </div>
+          </div>
+
+        </div>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- End About Us Section -->
+{% endblock content %}
