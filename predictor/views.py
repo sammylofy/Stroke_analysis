@@ -1,7 +1,6 @@
 import csv
 import pickle
 
-import os
 import openai
 from django.contrib import auth, messages
 from django.contrib.auth.models import User
@@ -23,7 +22,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
-openai.api_key = os.environ["OPENAI_API_KEY"]
+openai.api_key = "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"
 
 
 # Create your views here.
@@ -65,152 +64,170 @@ def index(request):
     return render(request, 'index.html', context={'title': title})
 
 
-@login_required(login_url='/login_user')
+##@login_required(login_url='/login_user')
 def dashboard(request):
-    title = "Dashboard"
-    return render(request, 'dashboard.html', context={'title': title})
+    if request.user.is_authenticated:
+        title = "Dashboard"
+        return render(request, 'dashboard.html', context={'title': title})
+    else:
+        return redirect('login_user')
 
 
-@login_required(login_url='/login_user')
+##@login_required(login_url='/login_user')
 def dashboard1(request):
-    title = "Dashboard"
-    return render(request, 'dashboard1.html', context={'title': title})
+    if request.user.is_authenticated:
+        title = "Dashboard"
+        return render(request, 'dashboard1.html', context={'title': title})
+    else:
+        return redirect('login_user')
 
 
-@login_required(login_url='/login_user')
+# @login_required(login_url='/login_user')
 def clients(request):
-    title = "Clients"
-    try:
-        clients = UserDet.objects.all()
-    except UserDet.DoesNotExist:
-        clients = None
-    return render(request, 'clients.html', context={'title': title, "clients": clients})
+    if request.user.is_authenticated:
+        title = "Clients"
+        try:
+            clients = UserDet.objects.all()
+        except UserDet.DoesNotExist:
+            clients = None
+        return render(request, 'clients.html', context={'title': title, "clients": clients})
+    else:
+        return redirect('login_user')
 
 
-@login_required(login_url='/login_user')
+# @login_required(login_url='/login_user')
 def report(request):
-    title = "Reports"
-    try:
-        reports = Data.objects.all()
-    except Data.DoesNotExist:
-        reports = None
-    return render(request, 'reports.html', context={'title': title, "reports": reports})
+    if request.user.is_authenticated:
+        title = "Reports"
+        try:
+            reports = Data.objects.all()
+        except Data.DoesNotExist:
+            reports = None
+        return render(request, 'reports.html', context={'title': title, "reports": reports})
+    else:
+        return redirect('login_user')
 
 
-@login_required(login_url='/login_user')
+# @login_required(login_url='/login_user')
 def detailreport(request, id):
-    title = "Detail Report"
-    gender = Data.objects.values('sex').get(id=id)
-    sex = gender.get('sex')
-    cgender = ""
-    if sex == 1:
-        cgender = "Male"
-    elif sex == 0:
-        cgender = "Female"
-    cage = Data.objects.values('age').get(id=id)
-    age = cage.get('age')
-    chistory = Data.objects.values('history').get(id=id)
-    history = chistory.get('history')
-    chypertension = Data.objects.values('hypertension').get(id=id)
-    hypertension = chypertension.get('hypertension')
-    cinactivity = Data.objects.values('inactivity').get(id=id)
-    inactivity = cinactivity.get('inactivity')
-    ccardiovascular = Data.objects.values('cardiovascular').get(id=id)
-    cardiovascular = ccardiovascular.get('cardiovascular')
-    chyperlidermia = Data.objects.values('hyperlidermia').get(id=id)
-    hyperlidermia = chyperlidermia.get('hyperlidermia')
-    calcohol = Data.objects.values('alcohol').get(id=id)
-    alcohol = calcohol.get('alcohol')
-    ctia = Data.objects.values('tia').get(id=id)
-    tia = ctia.get('tia')
-    cmsyndrome = Data.objects.values('msyndrome').get(id=id)
-    msyndrome = cmsyndrome.get('msyndrome')
-    catherosclerosis = Data.objects.values('atherosclerosis').get(id=id)
-    atherosclerosis = catherosclerosis.get('atherosclerosis')
-    caf = Data.objects.values('af').get(id=id)
-    af = caf.get('af')
-    clvh = Data.objects.values('lvh').get(id=id)
-    lvh = clvh.get('lvh')
-    cdiabetes = Data.objects.values('diabetes').get(id=id)
-    diabetes = cdiabetes.get('diabetes')
-    csmoking = Data.objects.values('smoking').get(id=id)
-    smoking = csmoking.get('smoking')
-    cstroke = Data.objects.values('stroke').get(id=id)
-    stroke = cstroke.get('stroke')
-    cadvice = Data.objects.values('advice').get(id=id)
-    advice = cadvice.get('advice')
-    cphone = Data.objects.values('phone_id').get(id=id)
-    phone = cphone.get('phone_id')
+    if request.user.is_authenticated:
+        title = "Detail Report"
+        gender = Data.objects.values('sex').get(id=id)
+        sex = gender.get('sex')
+        cgender = ""
+        if sex == 1:
+            cgender = "Male"
+        elif sex == 0:
+            cgender = "Female"
+        cage = Data.objects.values('age').get(id=id)
+        age = cage.get('age')
+        chistory = Data.objects.values('history').get(id=id)
+        history = chistory.get('history')
+        chypertension = Data.objects.values('hypertension').get(id=id)
+        hypertension = chypertension.get('hypertension')
+        cinactivity = Data.objects.values('inactivity').get(id=id)
+        inactivity = cinactivity.get('inactivity')
+        ccardiovascular = Data.objects.values('cardiovascular').get(id=id)
+        cardiovascular = ccardiovascular.get('cardiovascular')
+        chyperlidermia = Data.objects.values('hyperlidermia').get(id=id)
+        hyperlidermia = chyperlidermia.get('hyperlidermia')
+        calcohol = Data.objects.values('alcohol').get(id=id)
+        alcohol = calcohol.get('alcohol')
+        ctia = Data.objects.values('tia').get(id=id)
+        tia = ctia.get('tia')
+        cmsyndrome = Data.objects.values('msyndrome').get(id=id)
+        msyndrome = cmsyndrome.get('msyndrome')
+        catherosclerosis = Data.objects.values('atherosclerosis').get(id=id)
+        atherosclerosis = catherosclerosis.get('atherosclerosis')
+        caf = Data.objects.values('af').get(id=id)
+        af = caf.get('af')
+        clvh = Data.objects.values('lvh').get(id=id)
+        lvh = clvh.get('lvh')
+        cdiabetes = Data.objects.values('diabetes').get(id=id)
+        diabetes = cdiabetes.get('diabetes')
+        csmoking = Data.objects.values('smoking').get(id=id)
+        smoking = csmoking.get('smoking')
+        cstroke = Data.objects.values('stroke').get(id=id)
+        stroke = cstroke.get('stroke')
+        cadvice = Data.objects.values('advice').get(id=id)
+        advice = cadvice.get('advice')
+        cphone = Data.objects.values('phone_id').get(id=id)
+        phone = cphone.get('phone_id')
 
-    return render(request, 'detailreport.html',
-                  context={'title': title, "sex": sex, "age": age, "history": history, "hypertension": hypertension,
-                           "inactivity": inactivity, "cardiovascular": cardiovascular,
-                           "hyperlidermia": hyperlidermia, "alcohol": alcohol, "tia": tia, "msyndrome": msyndrome,
-                           "atherosclerosis": atherosclerosis, "af": af, "lvh": lvh,
-                           "diabetes": diabetes, "smoking": smoking, "stroke": stroke, "phone": phone,
-                           "advice": advice, "cgender": cgender, "id": id})
+        return render(request, 'detailreport.html',
+                      context={'title': title, "sex": sex, "age": age, "history": history, "hypertension": hypertension,
+                               "inactivity": inactivity, "cardiovascular": cardiovascular,
+                               "hyperlidermia": hyperlidermia, "alcohol": alcohol, "tia": tia, "msyndrome": msyndrome,
+                               "atherosclerosis": atherosclerosis, "af": af, "lvh": lvh,
+                               "diabetes": diabetes, "smoking": smoking, "stroke": stroke, "phone": phone,
+                               "advice": advice, "cgender": cgender, "id": id})
+    else:
+        return redirect('login_user')
 
 
-@login_required(login_url='/login_user')
+# @login_required(login_url='/login_user')
 def printreport(request, pid):
-    title = "Detail Report"
-    gender = Data.objects.values('sex').get(id=pid)
-    sex = gender.get('sex')
-    cgender = ""
-    if sex == 1:
-        cgender = "Male"
-    elif sex == 0:
-        cgender = "Female"
-    cage = Data.objects.values('age').get(id=pid)
-    age = cage.get('age')
-    chistory = Data.objects.values('history').get(id=pid)
-    history = chistory.get('history')
-    chypertension = Data.objects.values('hypertension').get(id=pid)
-    hypertension = chypertension.get('hypertension')
-    cinactivity = Data.objects.values('inactivity').get(id=pid)
-    inactivity = cinactivity.get('inactivity')
-    ccardiovascular = Data.objects.values('cardiovascular').get(id=pid)
-    cardiovascular = ccardiovascular.get('cardiovascular')
-    chyperlidermia = Data.objects.values('hyperlidermia').get(id=pid)
-    hyperlidermia = chyperlidermia.get('hyperlidermia')
-    calcohol = Data.objects.values('alcohol').get(id=pid)
-    alcohol = calcohol.get('alcohol')
-    ctia = Data.objects.values('tia').get(id=pid)
-    tia = ctia.get('tia')
-    cmsyndrome = Data.objects.values('msyndrome').get(id=pid)
-    msyndrome = cmsyndrome.get('msyndrome')
-    catherosclerosis = Data.objects.values('atherosclerosis').get(id=pid)
-    atherosclerosis = catherosclerosis.get('atherosclerosis')
-    caf = Data.objects.values('af').get(id=pid)
-    af = caf.get('af')
-    clvh = Data.objects.values('lvh').get(id=pid)
-    lvh = clvh.get('lvh')
-    cdiabetes = Data.objects.values('diabetes').get(id=pid)
-    diabetes = cdiabetes.get('diabetes')
-    csmoking = Data.objects.values('smoking').get(id=pid)
-    smoking = csmoking.get('smoking')
-    cstroke = Data.objects.values('stroke').get(id=pid)
-    stroke = cstroke.get('stroke')
-    cadvice = Data.objects.values('advice').get(id=pid)
-    advice = cadvice.get('advice')
-    cphone = Data.objects.values('phone_id').get(id=pid)
-    phone = cphone.get('phone_id')
-    model = pickle.load(open('model.pkl', 'rb'))
-    probability = model.predict_proba([
-        [history, hypertension, inactivity, cardiovascular, hyperlidermia, alcohol, tia, msyndrome, atherosclerosis,
-         sex, age, af,
-         lvh, diabetes, smoking]])
-    prob = probability[0][1]
-    prob = float(prob * 100)
-    prob = round(prob, 2)
-    result = prob < 70
-    return render(request, 'printreport.html',
-                  context={'title': title, "sex": sex, "age": age, "history": history, "hypertension": hypertension,
-                           "inactivity": inactivity, "cardiovascular": cardiovascular,
-                           "hyperlidermia": hyperlidermia, "alcohol": alcohol, "tia": tia, "msyndrome": msyndrome,
-                           "atherosclerosis": atherosclerosis, "af": af, "lvh": lvh,
-                           "diabetes": diabetes, "smoking": smoking, "stroke": stroke, "phone": phone,
-                           "advice": advice, "cgender": cgender, 'prob': prob})
+    if request.user.is_authenticated:
+        title = "Detail Report"
+        gender = Data.objects.values('sex').get(id=pid)
+        sex = gender.get('sex')
+        cgender = ""
+        if sex == 1:
+            cgender = "Male"
+        elif sex == 0:
+            cgender = "Female"
+        cage = Data.objects.values('age').get(id=pid)
+        age = cage.get('age')
+        chistory = Data.objects.values('history').get(id=pid)
+        history = chistory.get('history')
+        chypertension = Data.objects.values('hypertension').get(id=pid)
+        hypertension = chypertension.get('hypertension')
+        cinactivity = Data.objects.values('inactivity').get(id=pid)
+        inactivity = cinactivity.get('inactivity')
+        ccardiovascular = Data.objects.values('cardiovascular').get(id=pid)
+        cardiovascular = ccardiovascular.get('cardiovascular')
+        chyperlidermia = Data.objects.values('hyperlidermia').get(id=pid)
+        hyperlidermia = chyperlidermia.get('hyperlidermia')
+        calcohol = Data.objects.values('alcohol').get(id=pid)
+        alcohol = calcohol.get('alcohol')
+        ctia = Data.objects.values('tia').get(id=pid)
+        tia = ctia.get('tia')
+        cmsyndrome = Data.objects.values('msyndrome').get(id=pid)
+        msyndrome = cmsyndrome.get('msyndrome')
+        catherosclerosis = Data.objects.values('atherosclerosis').get(id=pid)
+        atherosclerosis = catherosclerosis.get('atherosclerosis')
+        caf = Data.objects.values('af').get(id=pid)
+        af = caf.get('af')
+        clvh = Data.objects.values('lvh').get(id=pid)
+        lvh = clvh.get('lvh')
+        cdiabetes = Data.objects.values('diabetes').get(id=pid)
+        diabetes = cdiabetes.get('diabetes')
+        csmoking = Data.objects.values('smoking').get(id=pid)
+        smoking = csmoking.get('smoking')
+        cstroke = Data.objects.values('stroke').get(id=pid)
+        stroke = cstroke.get('stroke')
+        cadvice = Data.objects.values('advice').get(id=pid)
+        advice = cadvice.get('advice')
+        cphone = Data.objects.values('phone_id').get(id=pid)
+        phone = cphone.get('phone_id')
+        model = pickle.load(open('model.pkl', 'rb'))
+        probability = model.predict_proba([
+            [history, hypertension, inactivity, cardiovascular, hyperlidermia, alcohol, tia, msyndrome, atherosclerosis,
+             sex, age, af,
+             lvh, diabetes, smoking]])
+        prob = probability[0][1]
+        prob = float(prob * 100)
+        prob = round(prob, 2)
+        result = prob < 70
+        return render(request, 'printreport.html',
+                      context={'title': title, "sex": sex, "age": age, "history": history, "hypertension": hypertension,
+                               "inactivity": inactivity, "cardiovascular": cardiovascular,
+                               "hyperlidermia": hyperlidermia, "alcohol": alcohol, "tia": tia, "msyndrome": msyndrome,
+                               "atherosclerosis": atherosclerosis, "af": af, "lvh": lvh,
+                               "diabetes": diabetes, "smoking": smoking, "stroke": stroke, "phone": phone,
+                               "advice": advice, "cgender": cgender, 'prob': prob})
+    else:
+        return redirect('login_user')
 
 
 def dataset(request):
@@ -237,44 +254,48 @@ def dataset(request):
     return response
 
 
-@login_required(login_url='/login_user')
+# @login_required(login_url='/login_user')
 def users(request):
-    title = 'New User'
-    #users = User.objects.filter(is_superuser=False)
-    users = DocDet.objects.all()
-    context = {'title': title, "users": users}
-    if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        cpassword = request.POST.get('cpassword')
-        firstname = request.POST.get('firstname')
-        lastname = request.POST.get('lastname')
-        email = request.POST.get('email')
-        phone = request.POST.get('phone')
-        if password == cpassword:
-            if User.objects.filter(username=username).exists():
-                messages.info(request, 'Username already exist')
-                return redirect('users')
+    if request.user.is_authenticated:
+        title = 'New User'
+        # users = User.objects.filter(is_superuser=False)
+        users = DocDet.objects.all()
+        context = {'title': title, "users": users}
+        if request.method == "POST":
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+            cpassword = request.POST.get('cpassword')
+            firstname = request.POST.get('firstname')
+            lastname = request.POST.get('lastname')
+            email = request.POST.get('email')
+            phone = request.POST.get('phone')
+            if password == cpassword:
+                if User.objects.filter(username=username).exists():
+                    messages.info(request, 'Username already exist')
+                    return redirect('users')
+                else:
+                    password = make_password(password)
+                    u = User.objects.create(first_name=firstname, password=password, is_superuser=False,
+                                            username=username,
+                                            last_name=lastname, email=email, is_staff=True, is_active=True,
+                                            date_joined=timezone.now())
+                    u.save()
+                    user = User.objects.get(username=username)
+                    userid = user.id
+                    ph = DocDet.objects.create(userid_id=userid, phone=phone)
+                    ph.save()
+                    messages.info(request, 'User added successfully')
+                    return redirect(reverse('users'))
             else:
-                password = make_password(password)
-                u = User.objects.create(first_name=firstname, password=password, is_superuser=False, username=username,
-                                        last_name=lastname, email=email, is_staff=True, is_active=True,
-                                        date_joined=timezone.now())
-                u.save()
-                user = User.objects.get(username=username)
-                userid = user.id
-                ph = DocDet.objects.create(userid_id=userid, phone=phone)
-                ph.save()
-                messages.info(request, 'User added successfully')
-                return redirect(reverse('users'))
+                messages.info(request, 'Password mismatch error')
+                return redirect('users')
         else:
-            messages.info(request, 'Password mismatch error')
-            return redirect('users')
+            return render(request, 'users.html', context)
     else:
-        return render(request, 'users.html', context)
+        return redirect('login_user')
 
 
-@login_required(login_url='/login_user')
+# @login_required(login_url='/login_user')
 def deluser(request, id):
     try:
         user = User.objects.filter(id=id).delete()
@@ -456,7 +477,7 @@ def predict(request):
     prob = float(prob * 100)
     prob = round(prob, 2)
     result = "False"
-    if prob < 70 :
+    if prob < 50:
         result = "True"
     else:
         result = "False"
@@ -465,69 +486,68 @@ def predict(request):
     uname = UserDet.objects.values('name').get(phone=phone)
     name = uname.get('name')
     chance_stroke = ''
-    chance_stroke += "Stroke Counsel to a patient named "+name+" aged "+ str(age) + "old,with detail diet " \
-                                                                                    "recommendations, " \
-                                                                                    "Whose probability of having " \
-                                                                                    "stroke is "+str(prob)
+    chance_stroke += "As a stroke counselor, I would like to provide recommendations for " + name + " " + str(
+        age) + " patient with a probability of having a stroke of " + str(prob) + ". " + name + " is "
     if sex == 1:
-        chance_stroke += ', a Male '
+        chance_stroke += 'a Male '
     if sex == 0:
-        chance_stroke += ' a Female '
+        chance_stroke += 'a Female '
     if history == 1:
-        chance_stroke += ' with a family history of stroke'
+        chance_stroke += ' with a family history of stroke,'
     if history == 0:
-        chance_stroke += ' with no family history of stroke'
+        chance_stroke += ' with no family history of stroke,'
     if history == 2:
-        chance_stroke += ' with an unsure family history of stroke.  '
+        chance_stroke += ' with an unsure family history of stroke,'
     if hypertension == 1:
-        chance_stroke += ' This patient is hypertensive'
+        chance_stroke += ' hypertensive,'
     if hypertension == 0:
-        chance_stroke += ' The patient is not hypertensive'
+        chance_stroke += ' not hypertensive,'
     if inactivity == 0:
-        chance_stroke += ' and does not exercise.'
+        chance_stroke += ' not exercising.'
     if inactivity == 1:
         chance_stroke += ' exercises regularly.'
     if cardiovascular == 0:
-        chance_stroke += ' This patient has not being diagnosed of cardiovascular disease.'
+        chance_stroke += ' has not been diagnosed of cardiovascular disease.'
     if cardiovascular == 1:
-        chance_stroke += ' This patient has been diagnosed of cardiovascular disease.'
+        chance_stroke += ' has been diagnosed of cardiovascular disease.'
     if hyperlidermia == 0:
-        chance_stroke += ' This patient has also not been diagnosed of hyperlipidemia,'
+        chance_stroke += 'Additionally, ' + name + ' doesn\'t have hyperlipidemia,'
     if hyperlidermia == 1:
-        chance_stroke += ' The patient also suffers from hyperlipidemia,'
+        chance_stroke += 'Additionally, ' + name + ' suffers from hyperlipidemia,'
     if alcohol == 0:
-        chance_stroke += ' and doesnt take alcohol.'
+        chance_stroke += ' doesn\'t consume alcohol,'
     if alcohol == 1:
-        chance_stroke += ' and takes alcohol.'
+        chance_stroke += ' consumes alcohol,'
     if tia == 0:
-        chance_stroke += ' No history of Transient Ischemic Stroke(TIA). '
+        chance_stroke += ' has no history of Transient Ischemic Stroke(TIA), '
     if tia == 1:
-        chance_stroke += ' History of Transient Ischemic Stroke(TIA). '
+        chance_stroke += ' has a history of Transient Ischemic Stroke(TIA), '
     if msyndrome == 0:
         chance_stroke += ' not diagnosed of metabolic Syndrome, '
     if msyndrome == 1:
         chance_stroke += ' suffers from metabolic syndrome, '
     if atherosclerosis == 0:
-        chance_stroke += ' does not suffer from atherosclerosis '
+        chance_stroke += ' does not suffer from atherosclerosis, '
     if atherosclerosis == 1:
-        chance_stroke += ' suffer from atherosclerosis, '
+        chance_stroke += ' suffers from atherosclerosis, '
     if af == 0:
         chance_stroke += ' has no case of atrial fibrillation, '
     if af == 1:
-        chance_stroke += ' has been reported to have atrial fibrillation, '
+        chance_stroke += ' reported to have atrial fibrillation, '
     if lvh == 0:
         chance_stroke += ' does not suffer from Left Ventricular Hypertrophy, '
     if lvh == 1:
         chance_stroke += ' suffers from Left Ventricular Hypertrophy, '
     if diabetes == 0:
-        chance_stroke += ' is not diabetic, '
+        chance_stroke += ' is not diabetic. '
     if diabetes == 1:
-        chance_stroke += ' is diabetic, '
+        chance_stroke += ' is diabetic. '
     if smoking == 0:
-        chance_stroke += ' does not smoke'
+        chance_stroke += 'Finally, ' + name + ' doesn\'t smoke.'
     if smoking == 1:
-        chance_stroke += ' smokes'
-
+        chance_stroke += 'Finally, ' + name + ' is a smoker.'
+        chance_stroke += " Could you please provide detailed diet recommendations and any other advice that would help " \
+                         "manage the risk factors associated with stroke in " + name + "\'s case? "
         print(chance_stroke)
     counseling_response = comp(chance_stroke, 3000, 3)
 
@@ -537,21 +557,6 @@ def predict(request):
                                   sex=sex, age=age, af=af, lvh=lvh, diabetes=diabetes, smoking=smoking, stroke=pred,
                                   phone_id=phone, advice=counseling_response)
     newdata.save()
-    #accuracy = accuracy_score([
-        #[history, hypertension, inactivity, cardiovascular, hyperlidermia, alcohol, tia, msyndrome, atherosclerosis,
-         #sex, age, af,
-         #lvh, diabetes, smoking]], pred)
-    #precision = precision_score([
-        #[history, hypertension, inactivity, cardiovascular, hyperlidermia, alcohol, tia, msyndrome, atherosclerosis,
-         #sex, age, af,
-         #lvh, diabetes, smoking]], pred)
-    #recall = recall_score([
-        #[history, hypertension, inactivity, cardiovascular, hyperlidermia, alcohol, tia, msyndrome, atherosclerosis,
-        # sex, age, af,
-         #lvh, diabetes, smoking]], pred)
-    #print('Accuracy',accuracy)
-    #print('Precision', precision)
-    #print('Recall', recall)
     return redirect('results', conseling=counseling_response, pred=pred, phone=phone, prob=prob, result=result)
 
 
@@ -562,7 +567,8 @@ def results(request, conseling, pred, phone, prob, result):
     except DocDet.DoesNotExist:
         users = None
     return render(request, 'results.html',
-                  context={"title": title, "conseling": conseling, 'pred': pred, 'users': users, 'phone': phone, 'prob': prob, 'result':result})
+                  context={"title": title, "conseling": conseling, 'pred': pred, 'users': users, 'phone': phone,
+                           'prob': prob, 'result': result})
 
 
 def comp(PROMPT, MaxToken, outputs):
@@ -577,6 +583,7 @@ def comp(PROMPT, MaxToken, outputs):
         prompt=PROMPT,
         # generated output can have "max_tokens" number of tokens
         max_tokens=MaxToken,
+        temperature=0.5,
         # number of outputs generated in one call
         n=outputs
     )
@@ -585,6 +592,7 @@ def comp(PROMPT, MaxToken, outputs):
     # for k in response['choices']:
     # output += k['text'].strip()
     return response["choices"][0]["text"]
+
 
 def printureport(request, phone):
     title = "Detail Report"
@@ -637,11 +645,7 @@ def printureport(request, phone):
     prob = probability[0][1]
     prob = float(prob * 100)
     prob = round(prob, 2)
-    result = False
-    if prob < 50:
-        result = True
-    else:
-        result = False
+    result = prob < 50
     return render(request, 'printreport.html',
                   context={'title': title, "sex": sex, "age": age, "history": history, "hypertension": hypertension,
                            "inactivity": inactivity, "cardiovascular": cardiovascular,
@@ -650,9 +654,10 @@ def printureport(request, phone):
                            "diabetes": diabetes, "smoking": smoking, "stroke": stroke, "phone": phone,
                            "advice": advice, "cgender": cgender, 'prob': prob})
 
+
 def requestdataset(request):
     title = 'New Researcher'
-    #users = User.objects.filter(is_superuser=False)
+    # users = User.objects.filter(is_superuser=False)
     context = {'title': title}
     if request.method == "POST":
         name = request.POST.get('name')

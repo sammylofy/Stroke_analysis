@@ -31,7 +31,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -75,21 +74,29 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'strokePredictionApp.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#   'default': {
+#      'ENGINE': 'django.db.backends.mysql',
+#     'NAME': 'stroke',
+#    'USER': 'root',
+#   'PASSWORD': 'sammy123',
+#  'HOST': 'localhost',
+# 'PORT': '3308',
+# }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'stroke',
-        'USER': 'root',
+        'USER': 'postgres',
         'PASSWORD': 'sammy123',
-        'HOST': 'localhost',
-        'PORT': '3308',
+        'HOST': '127.0.0.1',
+        'PORT': '5433',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -109,7 +116,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -120,7 +126,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

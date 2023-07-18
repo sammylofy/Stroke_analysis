@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import psycopg2
 
 
 # Create your models here.
