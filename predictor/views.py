@@ -1,6 +1,7 @@
 import csv
 import pickle
 
+import os
 import openai
 from django.contrib import auth, messages
 from django.contrib.auth.models import User
@@ -22,7 +23,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
-openai.api_key = "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"
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
 
 # Create your views here.
