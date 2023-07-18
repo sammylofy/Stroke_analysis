@@ -1,1 +1,1 @@
-web: gunicorn predictor.wsgi —log-file -
+web: gunicorn strokePredictionApp.wsgi —log-file -
