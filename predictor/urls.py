@@ -37,5 +37,4 @@ urlpatterns = [
     path('question13/', views.question13, name='question13'),
     path('predict/', views.predict, name='predict'),
     path('results/<conseling>/<pred>/<phone>/<prob>/<result>', views.results, name='results'),
-
 ]

@@ -549,7 +549,7 @@ def predict(request):
         chance_stroke += " Could you please provide detailed diet recommendations and any other advice that would help " \
                          "manage the risk factors associated with stroke in " + name + "\'s case? "
         print(chance_stroke)
-    counseling_response = comp(chance_stroke, 3000, 3)
+    counseling_response = comp(chance_stroke, 3500, 3)
 
     newdata = Data.objects.create(history=history, hypertension=hypertension, inactivity=inactivity,
                                   cardiovascular=cardiovascular, hyperlidermia=hyperlidermia, alcohol=alcohol, tia=tia,
