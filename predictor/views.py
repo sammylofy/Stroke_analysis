@@ -1,6 +1,7 @@
 import csv
 import pickle
 
+import os
 import openai
 from django.contrib import auth, messages
 from django.contrib.auth.models import User
@@ -22,7 +23,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
-openai.api_key = "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"
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
 
 # Create your views here.
@@ -487,7 +488,7 @@ def predict(request):
     name = uname.get('name')
     chance_stroke = ''
     chance_stroke += "As a stroke counselor, I would like to provide recommendations for " + name + " " + str(
-        age) + " patient with a probability of having a stroke of " + str(prob) + ". " + name + " is "
+        age) + " years old patient with a probability of having a stroke of " + str(prob) + "%. " + name + " is "
     if sex == 1:
         chance_stroke += 'a Male '
     if sex == 0:
