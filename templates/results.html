@@ -30,7 +30,7 @@
                       {% if result == "True" %}
                           <p>You have {{ prob }} % risk of having Stroke</p>
                           <p>{{ conseling }}</p>
-                          <p><a href="{% url 'printureport' phone %}" target="_blank">Get Full Report</a></p>
+                          <p><a href="{% url 'printureport' id %}" target="_blank">Get Full Report</a></p>
                       {% elif result == "False"  %}
                         <p><strong>You have {{ prob }} % risk of having Stroke you need to see a doctor urgently</strong></p>
                           <p>{{ conseling }}</p>

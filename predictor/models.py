@@ -22,6 +22,7 @@ class DocDet(models.Model):
 
 
 class Data(models.Model):
+    did = models.CharField(primary_key=True, max_length=100, unique=True)
     sex = models.IntegerField(null=False)
     age = models.IntegerField(null=False)
     history = models.IntegerField(null=False)

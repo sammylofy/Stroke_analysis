@@ -569,7 +569,7 @@ def results(request, conseling, pred, phone, prob, result):
         users = None
     return render(request, 'results.html',
                   context={"title": title, "conseling": conseling, 'pred': pred, 'users': users, 'phone': phone,
-                           'prob': prob, 'result': result})
+                           'prob': prob, 'result': result, "id": id})
 
 
 def comp(PROMPT, MaxToken, outputs):
@@ -597,46 +597,43 @@ def comp(PROMPT, MaxToken, outputs):
 
 def printureport(request, phone):
     title = "Detail Report"
-    gender = Data.objects.values('sex').get(phone_id=phone)
+    gender = Data.objects.values('sex').get(did=id)
     sex = gender.get('sex')
-    cgender = ""
-    if sex == 1:
-        cgender = "Male"
-    elif sex == 0:
-        cgender = "Female"
-    cage = Data.objects.values('age').get(phone_id=phone)
+    cgender = "Male" if sex == 1 else "Female"
+    cage = Data.objects.values('age').get(did=id)
     age = cage.get('age')
-    chistory = Data.objects.values('history').get(phone_id=phone)
+    chistory = Data.objects.values('history').get(did=id)
     history = chistory.get('history')
-    chypertension = Data.objects.values('hypertension').get(phone_id=phone)
+    chypertension = Data.objects.values('hypertension').get(did=id)
     hypertension = chypertension.get('hypertension')
-    cinactivity = Data.objects.values('inactivity').get(phone_id=phone)
+    cinactivity = Data.objects.values('inactivity').get(did=id)
     inactivity = cinactivity.get('inactivity')
-    ccardiovascular = Data.objects.values('cardiovascular').get(phone_id=phone)
+    ccardiovascular = Data.objects.values('cardiovascular').get(did=id)
     cardiovascular = ccardiovascular.get('cardiovascular')
-    chyperlidermia = Data.objects.values('hyperlidermia').get(phone_id=phone)
+    chyperlidermia = Data.objects.values('hyperlidermia').get(did=id)
     hyperlidermia = chyperlidermia.get('hyperlidermia')
-    calcohol = Data.objects.values('alcohol').get(phone_id=phone)
+    calcohol = Data.objects.values('alcohol').get(did=id)
     alcohol = calcohol.get('alcohol')
-    ctia = Data.objects.values('tia').get(phone_id=phone)
+    ctia = Data.objects.values('tia').get(did=id)
     tia = ctia.get('tia')
-    cmsyndrome = Data.objects.values('msyndrome').get(phone_id=phone)
+    cmsyndrome = Data.objects.values('msyndrome').get(did=id)
     msyndrome = cmsyndrome.get('msyndrome')
-    catherosclerosis = Data.objects.values('atherosclerosis').get(phone_id=phone)
+
+    catherosclerosis = Data.objects.values('atherosclerosis').get(did=id)
     atherosclerosis = catherosclerosis.get('atherosclerosis')
-    caf = Data.objects.values('af').get(phone_id=phone)
+    caf = Data.objects.values('af').get(did=id)
     af = caf.get('af')
-    clvh = Data.objects.values('lvh').get(phone_id=phone)
+    clvh = Data.objects.values('lvh').get(did=id)
     lvh = clvh.get('lvh')
-    cdiabetes = Data.objects.values('diabetes').get(phone_id=phone)
+    cdiabetes = Data.objects.values('diabetes').get(did=id)
     diabetes = cdiabetes.get('diabetes')
-    csmoking = Data.objects.values('smoking').get(phone_id=phone)
+    csmoking = Data.objects.values('smoking').get(did=id)
     smoking = csmoking.get('smoking')
-    cstroke = Data.objects.values('stroke').get(phone_id=phone)
+    cstroke = Data.objects.values('stroke').get(did=id)
     stroke = cstroke.get('stroke')
-    cadvice = Data.objects.values('advice').get(phone_id=phone)
+    cadvice = Data.objects.values('advice').get(did=id)
     advice = cadvice.get('advice')
-    cphone = Data.objects.values('phone_id').get(phone_id=phone)
+    cphone = Data.objects.values('phone_id').get(did=id)
     phone = cphone.get('phone_id')
     model = pickle.load(open('model.pkl', 'rb'))
     probability = model.predict_proba([
@@ -646,8 +643,8 @@ def printureport(request, phone):
     prob = probability[0][1]
     prob = float(prob * 100)
     prob = round(prob, 2)
-    result = prob < 50
-    return render(request, 'printreport.html',
+    # result = prob < 70
+    return render(request, 'printureport.html',
                   context={'title': title, "sex": sex, "age": age, "history": history, "hypertension": hypertension,
                            "inactivity": inactivity, "cardiovascular": cardiovascular,
                            "hyperlidermia": hyperlidermia, "alcohol": alcohol, "tia": tia, "msyndrome": msyndrome,
