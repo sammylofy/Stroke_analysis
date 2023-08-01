@@ -3,6 +3,7 @@ import pickle
 
 import os
 import openai
+import random
 from django.contrib import auth, messages
 from django.contrib.auth.models import User
 from django.http import request, HttpResponse
@@ -447,6 +448,8 @@ def question13(request):
 
 def predict(request):
     # collect prediction data from client
+    random_number = random.randint(1000000000, 9999999999)
+    id = str(random_number)
     history = int(request.session["qst1"])
     hypertension = int(request.session["qst2"])
     inactivity = int(request.session["qst3"])
@@ -552,13 +555,13 @@ def predict(request):
         print(chance_stroke)
     counseling_response = comp(chance_stroke, 3500, 3)
 
-    newdata = Data.objects.create(history=history, hypertension=hypertension, inactivity=inactivity,
+    newdata = Data.objects.create(did=id, history=history, hypertension=hypertension, inactivity=inactivity,
                                   cardiovascular=cardiovascular, hyperlidermia=hyperlidermia, alcohol=alcohol, tia=tia,
                                   msyndrome=msyndrome, atherosclerosis=atherosclerosis,
                                   sex=sex, age=age, af=af, lvh=lvh, diabetes=diabetes, smoking=smoking, stroke=pred,
                                   phone_id=phone, advice=counseling_response)
     newdata.save()
-    return redirect('results', conseling=counseling_response, pred=pred, phone=phone, prob=prob, result=result)
+    return redirect('results', conseling=counseling_response, pred=pred, phone=phone, prob=prob, result=result, did=id)
 
 
 def results(request, conseling, pred, phone, prob, result):
