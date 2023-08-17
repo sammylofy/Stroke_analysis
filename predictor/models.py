@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-import psycopg2
 
 
 # Create your models here.
@@ -44,7 +43,6 @@ class Data(models.Model):
 
     class Meta:
         db_table = "data"
-
 
 class Researchers(models.Model):
     email = models.CharField(unique=False, null=False, max_length=100)

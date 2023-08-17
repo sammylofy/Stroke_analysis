@@ -1,12 +1,13 @@
 import csv
 import pickle
+import random
+import requests.exceptions
 
 import os
 import openai
-import random
 from django.contrib import auth, messages
 from django.contrib.auth.models import User
-from django.http import request, HttpResponse
+from django.http import request, HttpResponse, HttpResponseServerError
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
@@ -25,7 +26,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
-
 
 # Create your views here.
 def login_user(request):
@@ -111,49 +111,49 @@ def report(request):
 
 
 # @login_required(login_url='/login_user')
-def detailreport(request, id):
+def detailreport(request, did):
     if request.user.is_authenticated:
         title = "Detail Report"
-        gender = Data.objects.values('sex').get(id=id)
+        gender = Data.objects.values('sex').get(did=did)
         sex = gender.get('sex')
         cgender = ""
         if sex == 1:
             cgender = "Male"
         elif sex == 0:
             cgender = "Female"
-        cage = Data.objects.values('age').get(id=id)
+        cage = Data.objects.values('age').get(did=did)
         age = cage.get('age')
-        chistory = Data.objects.values('history').get(id=id)
+        chistory = Data.objects.values('history').get(did=did)
         history = chistory.get('history')
-        chypertension = Data.objects.values('hypertension').get(id=id)
+        chypertension = Data.objects.values('hypertension').get(did=did)
         hypertension = chypertension.get('hypertension')
-        cinactivity = Data.objects.values('inactivity').get(id=id)
+        cinactivity = Data.objects.values('inactivity').get(did=did)
         inactivity = cinactivity.get('inactivity')
-        ccardiovascular = Data.objects.values('cardiovascular').get(id=id)
+        ccardiovascular = Data.objects.values('cardiovascular').get(did=did)
         cardiovascular = ccardiovascular.get('cardiovascular')
-        chyperlidermia = Data.objects.values('hyperlidermia').get(id=id)
+        chyperlidermia = Data.objects.values('hyperlidermia').get(did=did)
         hyperlidermia = chyperlidermia.get('hyperlidermia')
-        calcohol = Data.objects.values('alcohol').get(id=id)
+        calcohol = Data.objects.values('alcohol').get(did=did)
         alcohol = calcohol.get('alcohol')
-        ctia = Data.objects.values('tia').get(id=id)
+        ctia = Data.objects.values('tia').get(did=did)
         tia = ctia.get('tia')
-        cmsyndrome = Data.objects.values('msyndrome').get(id=id)
+        cmsyndrome = Data.objects.values('msyndrome').get(did=did)
         msyndrome = cmsyndrome.get('msyndrome')
-        catherosclerosis = Data.objects.values('atherosclerosis').get(id=id)
+        catherosclerosis = Data.objects.values('atherosclerosis').get(did=did)
         atherosclerosis = catherosclerosis.get('atherosclerosis')
-        caf = Data.objects.values('af').get(id=id)
+        caf = Data.objects.values('af').get(did=did)
         af = caf.get('af')
-        clvh = Data.objects.values('lvh').get(id=id)
+        clvh = Data.objects.values('lvh').get(did=did)
         lvh = clvh.get('lvh')
-        cdiabetes = Data.objects.values('diabetes').get(id=id)
+        cdiabetes = Data.objects.values('diabetes').get(did=did)
         diabetes = cdiabetes.get('diabetes')
-        csmoking = Data.objects.values('smoking').get(id=id)
+        csmoking = Data.objects.values('smoking').get(did=did)
         smoking = csmoking.get('smoking')
-        cstroke = Data.objects.values('stroke').get(id=id)
+        cstroke = Data.objects.values('stroke').get(did=did)
         stroke = cstroke.get('stroke')
-        cadvice = Data.objects.values('advice').get(id=id)
+        cadvice = Data.objects.values('advice').get(did=did)
         advice = cadvice.get('advice')
-        cphone = Data.objects.values('phone_id').get(id=id)
+        cphone = Data.objects.values('phone_id').get(did=did)
         phone = cphone.get('phone_id')
 
         return render(request, 'detailreport.html',
@@ -162,7 +162,7 @@ def detailreport(request, id):
                                "hyperlidermia": hyperlidermia, "alcohol": alcohol, "tia": tia, "msyndrome": msyndrome,
                                "atherosclerosis": atherosclerosis, "af": af, "lvh": lvh,
                                "diabetes": diabetes, "smoking": smoking, "stroke": stroke, "phone": phone,
-                               "advice": advice, "cgender": cgender, "id": id})
+                               "advice": advice, "cgender": cgender, "did": did})
     else:
         return redirect('login_user')
 
@@ -552,19 +552,57 @@ def predict(request):
         chance_stroke += 'Finally, ' + name + ' is a smoker.'
         chance_stroke += " Could you please provide detailed diet recommendations and any other advice that would help " \
                          "manage the risk factors associated with stroke in " + name + "\'s case? "
-        print(chance_stroke)
-    counseling_response = comp(chance_stroke, 3500, 3)
+    try:
+        counseling_response = ""
+        response = openai.Completion.create(
+            # model name used here is text-davinci-003
+            # there are many other models available under the
+            # umbrella of GPT-3
+            model="text-davinci-003",
+            # passing the user input
+            prompt=chance_stroke,
+            # generated output can have "max_tokens" number of tokens
+            max_tokens=2000,
+            temperature=0.5,
+            # number of outputs generated in one call
+            n=5
+        )
+        # creating a list to store all the outputs
+        # output = ""
+        # for k in response['choices']:
+        # output += k['text'].strip()
+        counseling_response = response["choices"][0]["text"]
 
-    newdata = Data.objects.create(did=id, history=history, hypertension=hypertension, inactivity=inactivity,
-                                  cardiovascular=cardiovascular, hyperlidermia=hyperlidermia, alcohol=alcohol, tia=tia,
-                                  msyndrome=msyndrome, atherosclerosis=atherosclerosis,
-                                  sex=sex, age=age, af=af, lvh=lvh, diabetes=diabetes, smoking=smoking, stroke=pred,
-                                  phone_id=phone, advice=counseling_response)
-    newdata.save()
-    return redirect('results', conseling=counseling_response, pred=pred, phone=phone, prob=prob, result=result, did=id)
+        newdata = Data.objects.create(did=id, history=history, hypertension=hypertension, inactivity=inactivity,
+                                      cardiovascular=cardiovascular, hyperlidermia=hyperlidermia, alcohol=alcohol,
+                                      tia=tia,
+                                      msyndrome=msyndrome, atherosclerosis=atherosclerosis,
+                                      sex=sex, age=age, af=af, lvh=lvh, diabetes=diabetes, smoking=smoking, stroke=pred,
+                                      phone_id=phone, advice=counseling_response)
+        newdata.save()
+        return redirect('results', conseling=counseling_response, pred=pred, phone=phone, prob=prob, result=result,
+                        id=id)
+    except ConnectionError as e:
+        counseling_response = "Network Error"
+        messages.info(request, counseling_response)
+        return render(request, 'message.html')
+    except requests.exceptions.RequestException as e:
+        # Handle network-related errors (including DNS resolution) from the requests library
+        error_message = "Network Error: " + str(e)
+        messages.info(request, error_message)
+        return render(request, 'message.html')
+    except openai.OpenAIError as e:
+        error_message = "OpenAI API Error: " + str(e)
+        messages.info(request, error_message)
+        return render(request, 'message.html')
+    except openai.OpenAIError as e:
+        # Handle the OpenAI API key error gracefully
+        error_message = "OpenAI API Key Error: " + str(e)
+        messages.info(request, error_message)
+        return render(request, 'message.html')
 
 
-def results(request, conseling, pred, phone, prob, result):
+def results(request, conseling, pred, phone, prob, result, id):
     title = "Results"
     try:
         users = DocDet.objects.all()
@@ -578,31 +616,48 @@ def results(request, conseling, pred, phone, prob, result):
 def comp(PROMPT, MaxToken, outputs):
     # using OpenAI's Completion module that helps execute
     # any tasks involving text
-    response = openai.Completion.create(
-        # model name used here is text-davinci-003
-        # there are many other models available under the
-        # umbrella of GPT-3
-        model="text-davinci-003",
-        # passing the user input
-        prompt=PROMPT,
-        # generated output can have "max_tokens" number of tokens
-        max_tokens=MaxToken,
-        temperature=0.5,
-        # number of outputs generated in one call
-        n=outputs
-    )
-    # creating a list to store all the outputs
-    # output = ""
-    # for k in response['choices']:
-    # output += k['text'].strip()
-    return response["choices"][0]["text"]
+    try:
+
+        response = openai.Completion.create(
+            # model name used here is text-davinci-003
+            # there are many other models available under the
+            # umbrella of GPT-3
+            model="text-davinci-003",
+            # passing the user input
+            prompt=PROMPT,
+            # generated output can have "max_tokens" number of tokens
+            max_tokens=MaxToken,
+            temperature=0.5,
+            # number of outputs generated in one call
+            n=outputs
+        )
+        # creating a list to store all the outputs
+        # output = ""
+        # for k in response['choices']:
+        # output += k['text'].strip()
+        return response["choices"][0]["text"]
+    except requests.exceptions.RequestException as e:
+        # Handle network-related errors (including DNS resolution) from the requests library
+        error_message = "Network Error: " + str(e)
+        return error_message
+    except openai.OpenAIError as e:
+        error_message = "OpenAI API Error: " + str(e)
+        return error_message
+    except openai.OpenAIError as e:
+        # Handle the OpenAI API key error gracefully
+        error_message = "OpenAI API Key Error: " + str(e)
+        return error_message
 
 
-def printureport(request, phone):
+def printureport(request, id):
     title = "Detail Report"
     gender = Data.objects.values('sex').get(did=id)
     sex = gender.get('sex')
-    cgender = "Male" if sex == 1 else "Female"
+    cgender = ""
+    if sex == 1:
+        cgender = "Male"
+    elif sex == 0:
+        cgender = "Female"
     cage = Data.objects.values('age').get(did=id)
     age = cage.get('age')
     chistory = Data.objects.values('history').get(did=id)
@@ -668,3 +723,9 @@ def requestdataset(request):
         return redirect(reverse('dataset'))
     else:
         return render(request, 'requestdataset.html', context)
+
+def viewallreports(request):
+    title = "View Reports"
+    reports = Data.objects.all()
+    context = {'title': title, 'reports':reports}
+    return render(request, "viewallreports.html", context)
