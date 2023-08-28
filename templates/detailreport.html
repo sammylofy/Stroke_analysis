@@ -98,12 +98,12 @@
                                         <td align="left">{% if stroke == 0 %}Low risk of having stroke{% elif stroke == 1 %}High risk of having stroke{% endif %}</td>
                                     </tr>
                                 <tr>
-                                        <td colspan="2" align="justify"><p>{{ advice }}</p></td>
+                                        <td colspan="2" align="justify"><p>{{advice|linebreaks}}</p></td>
                                     </tr>
                 </tbody>
               </table>
                <!-- Removed and should be replaced -->
-                REPLACE ME
+                <p><a href="{% url 'printreport' did %}" target="_blank">Print Full Report</a></p>
                 </div>
 
               </div>

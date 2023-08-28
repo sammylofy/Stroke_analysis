@@ -168,66 +168,58 @@ def detailreport(request, did):
 
 
 # @login_required(login_url='/login_user')
-def printreport(request, pid):
+def printreport(request, did):
     if request.user.is_authenticated:
-        title = "Detail Report"
-        gender = Data.objects.values('sex').get(id=pid)
+        title = "Print Report"
+        gender = Data.objects.values('sex').get(did=did)
         sex = gender.get('sex')
         cgender = ""
         if sex == 1:
             cgender = "Male"
         elif sex == 0:
             cgender = "Female"
-        cage = Data.objects.values('age').get(id=pid)
+        cage = Data.objects.values('age').get(did=did)
         age = cage.get('age')
-        chistory = Data.objects.values('history').get(id=pid)
+        chistory = Data.objects.values('history').get(did=did)
         history = chistory.get('history')
-        chypertension = Data.objects.values('hypertension').get(id=pid)
+        chypertension = Data.objects.values('hypertension').get(did=did)
         hypertension = chypertension.get('hypertension')
-        cinactivity = Data.objects.values('inactivity').get(id=pid)
+        cinactivity = Data.objects.values('inactivity').get(did=did)
         inactivity = cinactivity.get('inactivity')
-        ccardiovascular = Data.objects.values('cardiovascular').get(id=pid)
+        ccardiovascular = Data.objects.values('cardiovascular').get(did=did)
         cardiovascular = ccardiovascular.get('cardiovascular')
-        chyperlidermia = Data.objects.values('hyperlidermia').get(id=pid)
+        chyperlidermia = Data.objects.values('hyperlidermia').get(did=did)
         hyperlidermia = chyperlidermia.get('hyperlidermia')
-        calcohol = Data.objects.values('alcohol').get(id=pid)
+        calcohol = Data.objects.values('alcohol').get(did=did)
         alcohol = calcohol.get('alcohol')
-        ctia = Data.objects.values('tia').get(id=pid)
+        ctia = Data.objects.values('tia').get(did=did)
         tia = ctia.get('tia')
-        cmsyndrome = Data.objects.values('msyndrome').get(id=pid)
+        cmsyndrome = Data.objects.values('msyndrome').get(did=did)
         msyndrome = cmsyndrome.get('msyndrome')
-        catherosclerosis = Data.objects.values('atherosclerosis').get(id=pid)
+        catherosclerosis = Data.objects.values('atherosclerosis').get(did=did)
         atherosclerosis = catherosclerosis.get('atherosclerosis')
-        caf = Data.objects.values('af').get(id=pid)
+        caf = Data.objects.values('af').get(did=did)
         af = caf.get('af')
-        clvh = Data.objects.values('lvh').get(id=pid)
+        clvh = Data.objects.values('lvh').get(did=did)
         lvh = clvh.get('lvh')
-        cdiabetes = Data.objects.values('diabetes').get(id=pid)
+        cdiabetes = Data.objects.values('diabetes').get(did=did)
         diabetes = cdiabetes.get('diabetes')
-        csmoking = Data.objects.values('smoking').get(id=pid)
+        csmoking = Data.objects.values('smoking').get(did=did)
         smoking = csmoking.get('smoking')
-        cstroke = Data.objects.values('stroke').get(id=pid)
+        cstroke = Data.objects.values('stroke').get(did=did)
         stroke = cstroke.get('stroke')
-        cadvice = Data.objects.values('advice').get(id=pid)
+        cadvice = Data.objects.values('advice').get(did=did)
         advice = cadvice.get('advice')
-        cphone = Data.objects.values('phone_id').get(id=pid)
+        cphone = Data.objects.values('phone_id').get(did=did)
         phone = cphone.get('phone_id')
-        model = pickle.load(open('model.pkl', 'rb'))
-        probability = model.predict_proba([
-            [history, hypertension, inactivity, cardiovascular, hyperlidermia, alcohol, tia, msyndrome, atherosclerosis,
-             sex, age, af,
-             lvh, diabetes, smoking]])
-        prob = probability[0][1]
-        prob = float(prob * 100)
-        prob = round(prob, 2)
-        result = prob < 70
+
         return render(request, 'printreport.html',
                       context={'title': title, "sex": sex, "age": age, "history": history, "hypertension": hypertension,
                                "inactivity": inactivity, "cardiovascular": cardiovascular,
                                "hyperlidermia": hyperlidermia, "alcohol": alcohol, "tia": tia, "msyndrome": msyndrome,
                                "atherosclerosis": atherosclerosis, "af": af, "lvh": lvh,
                                "diabetes": diabetes, "smoking": smoking, "stroke": stroke, "phone": phone,
-                               "advice": advice, "cgender": cgender, 'prob': prob})
+                               "advice": advice, "cgender": cgender, "did": did})
     else:
         return redirect('login_user')
 
