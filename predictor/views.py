@@ -25,9 +25,11 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
+#openai.api_key = os.environ["OPENAI_API_KEY"]
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
 # Create your views here.
+
 def login_user(request):
     title = 'Login'
     context = {"title": title}
@@ -472,6 +474,7 @@ def predict(request):
     prob = probability[0][1]
     prob = float(prob * 100)
     prob = round(prob, 2)
+
     result = "False"
     if prob < 50:
         result = "True"
