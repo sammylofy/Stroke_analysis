@@ -26,7 +26,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn import metrics
 
 #openai.api_key = os.environ["OPENAI_API_KEY"]
-openai.api_key = os.environ["OPENAI_API_KEY"]
+openai.api_key = "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"
+
 
 # Create your views here.
 
@@ -81,7 +82,8 @@ def dashboard(request):
 def dashboard1(request):
     if request.user.is_authenticated:
         title = "Dashboard"
-        return render(request, 'dashboard1.html', context={'title': title})
+        users = DocDet.objects.all()
+        return render(request, 'dashboard1.html', context={'title': title, "users": users})
     else:
         return redirect('login_user')
 
@@ -157,13 +159,22 @@ def detailreport(request, did):
         advice = cadvice.get('advice')
         cphone = Data.objects.values('phone_id').get(did=did)
         phone = cphone.get('phone_id')
+        model = pickle.load(open('model.pkl', 'rb'))
+        probability = model.predict_proba([
+            [history, hypertension, inactivity, cardiovascular, hyperlidermia, alcohol, tia, msyndrome, atherosclerosis,
+             sex, age, af,
+             lvh, diabetes, smoking]])
+        prob = probability[0][1]
+        prob = float(prob * 100)
+        prob =round(prob,2)
 
         return render(request, 'detailreport.html',
                       context={'title': title, "sex": sex, "age": age, "history": history, "hypertension": hypertension,
                                "inactivity": inactivity, "cardiovascular": cardiovascular,
                                "hyperlidermia": hyperlidermia, "alcohol": alcohol, "tia": tia, "msyndrome": msyndrome,
                                "atherosclerosis": atherosclerosis, "af": af, "lvh": lvh,
-                               "diabetes": diabetes, "smoking": smoking, "stroke": stroke, "phone": phone,
+                               "diabetes": diabetes, "smoking": smoking, "stroke": stroke, "percent": prob,
+                               "phone": phone,
                                "advice": advice, "cgender": cgender, "did": did})
     else:
         return redirect('login_user')
@@ -214,13 +225,22 @@ def printreport(request, did):
         advice = cadvice.get('advice')
         cphone = Data.objects.values('phone_id').get(did=did)
         phone = cphone.get('phone_id')
+        model = pickle.load(open('model.pkl', 'rb'))
+        probability = model.predict_proba([
+            [history, hypertension, inactivity, cardiovascular, hyperlidermia, alcohol, tia, msyndrome, atherosclerosis,
+             sex, age, af,
+             lvh, diabetes, smoking]])
+        prob = probability[0][1]
+        prob = float(prob * 100)
+        prob = round(prob, 2)
 
         return render(request, 'printreport.html',
                       context={'title': title, "sex": sex, "age": age, "history": history, "hypertension": hypertension,
                                "inactivity": inactivity, "cardiovascular": cardiovascular,
                                "hyperlidermia": hyperlidermia, "alcohol": alcohol, "tia": tia, "msyndrome": msyndrome,
                                "atherosclerosis": atherosclerosis, "af": af, "lvh": lvh,
-                               "diabetes": diabetes, "smoking": smoking, "stroke": stroke, "phone": phone,
+                               "diabetes": diabetes, "smoking": smoking, "stroke": stroke, "percent": prob,
+                               "phone": phone,
                                "advice": advice, "cgender": cgender, "did": did})
     else:
         return redirect('login_user')
@@ -242,7 +262,7 @@ def dataset(request):
 
         for data in dataset:
             writer.writerow(
-                [data.id, data.sex, data.age, data.history, data.hypertension, data.inactivity, data.cardiovascular,
+                [data.did, data.sex, data.age, data.history, data.hypertension, data.inactivity, data.cardiovascular,
                  data.hyperlidermia, data.alcohol, data.tia, data.msyndrome, data.atherosclerosis, data.af, data.lvh,
                  data.diabetes, data.smoking, data.stroke])
     except Data.DoesNotExist:
@@ -573,6 +593,7 @@ def predict(request):
                                       tia=tia,
                                       msyndrome=msyndrome, atherosclerosis=atherosclerosis,
                                       sex=sex, age=age, af=af, lvh=lvh, diabetes=diabetes, smoking=smoking, stroke=pred,
+                                      percent=prob,
                                       phone_id=phone, advice=counseling_response)
         newdata.save()
         return redirect('results', conseling=counseling_response, pred=pred, phone=phone, prob=prob, result=result,
@@ -719,8 +740,9 @@ def requestdataset(request):
     else:
         return render(request, 'requestdataset.html', context)
 
+
 def viewallreports(request):
     title = "View Reports"
     reports = Data.objects.all()
-    context = {'title': title, 'reports':reports}
+    context = {'title': title, 'reports': reports}
     return render(request, "viewallreports.html", context)

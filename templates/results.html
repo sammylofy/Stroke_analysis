@@ -29,7 +29,7 @@
                   <div style="text-align: justify; font-size: larger">
                       {% if result == "True" %}
                           <p>You have {{ prob }} % risk of having Stroke</p>
-                          <p>{{ conseling }}</p>
+                          <p>{{ conseling | linebreaks }}</p>
                           <p><a href="{% url 'printureport' id %}" target="_blank">Get Full Report</a></p>
                       {% elif result == "False"  %}
                         <p><strong>You have {{ prob }} % risk of having Stroke you need to see a doctor urgently</strong></p>

@@ -95,7 +95,7 @@
                                     </tr>
                                 <tr>
                                         <td align="right">General Prediction</td>
-                                        <td align="left">{% if stroke == 0 %}Low risk of having stroke{% elif stroke == 1 %}High risk of having stroke{% endif %}</td>
+                                        <td align="left">{% if stroke == 0 %}Low risk of having stroke{% elif stroke == 1 %}High risk of having stroke{% endif %} with {{ percent }}%</td>
                                     </tr>
                                 <tr>
                                         <td colspan="2" align="justify"><p>{{advice|linebreaks}}</p></td>

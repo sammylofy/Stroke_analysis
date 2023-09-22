@@ -38,6 +38,7 @@ class Data(models.Model):
     diabetes = models.IntegerField(null=False)
     smoking = models.IntegerField(null=False)
     stroke = models.IntegerField(null=False)
+    percent = models.DecimalField(max_digits=4, decimal_places=2)
     phone = models.ForeignKey(UserDet, on_delete=models.CASCADE)
     advice = models.TextField()
 

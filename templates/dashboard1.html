@@ -26,24 +26,42 @@
               <div class="card">
 
                 <div class="card-body">
-                  <h5 class="card-title">Distribution</h5>
+                  <h5 class="card-title">List of Doctors</h5>
+
+                    <table class="table table-striped datatable" width="100%">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Email</th>
+                      <th scope="col">Phone Number</th>
+                    <th scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                 {%for user in users %}
+              <tr>
+                <td>{{forloop.counter}}</td>
+                <td>{{user.userid.username}}</td>
+                <td>{{user.userid.first_name}}</td>
+                <td>{{user.userid.last_name}}</td>
+                <td>{{user.userid.email}}</td>
+                  <td>{{user.phone}}</td>
+                <td> <a href="{%url 'deluser' user.userid.id %}" class="btn btn-danger">Delete</a></td>
+              </tr>
+              {% endfor %}
+
+                </tbody>
+      </table>
 
                 </div>
 
               </div>
             </div><!-- End Reports -->
 
-        <!-- Reports -->
-            <div class="col-12">
-              <div class="card">
 
-                <div class="card-body">
-                  <h5 class="card-title"></h5>
-
-                </div>
-
-              </div>
-            </div><!-- End Reports -->
 
           </div>
         </div><!-- End Left side columns -->
